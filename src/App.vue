@@ -1,30 +1,72 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
   <router-view/>
 </template>
 
-<style lang="scss">
+<style>
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+:root{
+  --va-dropdown-content-background: #51545d !important;
+}
+
+.vjs-theme-fantasy{
+  --vjs-theme-fantasy--primary: white !important;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  background-color: #222327;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+.va-navbar{
+  height: auto !important;
+  text-align: center;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+.video-js .vjs-big-play-button{
+  top: 48% !important;
+  left: 47% !important;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.graybar{
+  height: 5px;
+  background-color: #727377;
+  border-radius: 1px;
+}
+
+.whitebar{
+  height: 5px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+
+.text-gray, .graybar+div{
+  color: #727377;
+  width: 100%;
 }
 </style>

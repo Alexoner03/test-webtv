@@ -1,0 +1,605 @@
+#chmenubtn{
+    position: absolute;
+    left: 0;
+    top: calc(50% - 70px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    filter:drop-shadow(2px 0.5px 0 #BBB);
+    border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    user-select: none;
+    z-index: 9;
+}
+
+#chmenubtn img{
+    height: 140px;
+}
+
+#chmenubtn.opened{
+    left: 256px;
+}
+
+#delerfav.favbtn,
+#addtofav.favbtn{
+    position: absolute;
+    top: 10px;
+    z-index: 5;
+    right: 20px;
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 1s,opacity 1s;
+}
+
+#addtofav.fade, #delerfav.fade{
+    opacity: 0;
+    visibility: hidden;
+}
+
+#delerfav.done{
+    background-color: #f44336 !important;
+    border-color: #f44336 !important;
+    pointer-events: none;
+}
+
+#addtofav.done{
+    background-color: var(--webtv-accent) !important;
+    color: black !important;
+    border-color: var(--webtv-accent) !important;
+    pointer-events: none;
+}
+
+#addtofav+div{
+    position: absolute;
+    top: 50px;
+    z-index: 5;
+    right: 35px;
+    background-color: white;
+    width: 170px;
+    color: #727377;
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+#app header.va-navbar{
+    z-index: 6 !important;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.overflow-h{
+    overflow: hidden;
+}
+
+.menuitem{
+    color: #838486;
+}
+
+.menuitem .svgicon{
+    filter: invert(56%) sepia(5%) saturate(140%) hue-rotate(182deg) brightness(92%) contrast(90%);
+}
+
+.menuitem.active{
+    color: var(--webtv-accent);
+    box-shadow: inset 0 -4px 0 0 var(--webtv-accent);
+}
+
+.menuitem.active .svgicon{
+    /* filter: invert(63%) sepia(77%) saturate(2375%) hue-rotate(126deg) brightness(95%) contrast(103%); */
+    filter: var(--webtv-filter-icon);
+}
+
+.menuitem span{
+    font-size: .7rem;
+    font-weight: bold;
+}
+
+#usermenu a{
+    color: white !important;
+    font-family: Avenir, Helvetica, Arial, sans-serif !important;
+    font-size: .9rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.va-dropdown__content{
+    padding: 0 !important;
+    background-color: #656565 !important;
+    z-index: 10;
+}
+
+.va-sidebar{
+    background-color: #222327 !important;
+    color: white !important;
+    z-index: 9 !important;
+}
+
+.va-sidebar__title{
+    cursor: pointer;
+}
+
+.va-sidebar__item__content{
+    min-height: 45px !important;
+}
+
+#userbg .va-button__content{
+    padding-left: 40px;
+    background-image: url('https://artacuri.dev/trapemn/imgrepo/user1.png');
+    background-size: 25px;
+    background-repeat: no-repeat;
+    background-position: 8px 4.5px;
+    padding-bottom: 1px;
+    line-height: 0;
+}
+
+#main{
+    height: 88.5vh;
+    position: relative;
+}
+
+#main:full-screen>div>div{ 
+    height: 100vh;
+}
+
+#main:fullscreen>div>div{ 
+    height: 100vh;
+}
+
+#main:full-screen .barEPG{ 
+    display: none !important;
+}
+
+#main:fullscreen .barEPG{ 
+    display: none !important;
+}
+
+.sectionhead{
+    cursor: default;
+    font-size: .8rem;
+}
+
+.sectionhead::first-letter{
+    text-transform: uppercase;
+}
+
+.channel{
+    height: 33px;
+    white-space: nowrap;
+    border-left: 0 !important;
+    transition-property: all;
+    transition-duration: 1.5s;
+    cursor: pointer;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.chnum{
+    display: inline-block;
+    color: #888888;
+    font-size: 1.1rem;
+    background-color: #2F2F2F;
+    vertical-align: middle;
+    width: 53px;
+}
+
+.watching .chnum{
+    color: var(--webtv-accent);
+    font-weight: bold;
+}
+
+.chlogo{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.chname{
+    vertical-align: middle;
+    display: inline-block;
+    width: 100%;
+}
+
+.chname *{
+    cursor: pointer !important;
+}
+
+.chname::first-letter{
+    text-transform: uppercase;
+}
+
+.favtrash{
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.video-js{
+    height: 88.5vh;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.video-js.vjs-playing .vjs-tech{
+    pointer-events: none;
+}
+
+.vjs-theme-fantasy .vjs-control-bar{
+    bottom: 6px;
+    width: 96%;
+    left: 2%;
+    height: 80px;
+    padding: 13px 5px 13px 20px;
+    background-color: #222327;
+}
+
+.video-js .vjs-volume-vertical{
+    background-color: rgba(43,51,63,.9);
+}
+
+#logomobile,
+.vjs-live-display,
+.vjs-caption-settings,
+.vjs-texttrack-settings,
+.video-js .vjs-play-control,
+.video-js .vjs-live-control,
+.vjs-progress-control.vjs-control,
+.video-js .vjs-picture-in-picture-control,
+.video-js .vjs-fullscreen-control[title="Fullscreen"],
+.vjs-subs-caps-button
+{
+    display: none;
+}
+
+.video-js .vjs-control{
+    order: 6;
+}
+
+.vjs-volume-panel, .video-js .vjs-fullscreen-control{
+    margin-right: 10px !important;
+}
+
+.video-js .vjs-mute-control .vjs-icon-placeholder:before, .vjs-icon-volume-high:before{
+    font-size: 4.4em;
+    color: #727377;
+}
+
+.video-js .vjs-fullscreen-control .vjs-icon-placeholder:before, .vjs-icon-fullscreen-enter:before{
+    font-size: 5.2em;
+    color: #727377;
+}
+
+.video-js .vjs-mute-control .vjs-icon-placeholder:hover:before, .vjs-icon-volume-high:hover:before,
+.video-js .vjs-fullscreen-control .vjs-icon-placeholder:hover:before, .vjs-icon-fullscreen-enter:hover:before
+{
+    color: white !important;
+}
+
+.barNum{
+    order: 1 !important;
+    width: auto !important; 
+    padding-right: 15px !important;
+    font-size: 4em !important;
+}
+
+.barImg{
+    order: 2 !important;
+    width: auto !important; 
+    padding-right: 10px !important;
+    margin-top: -7.5px !important;
+    height: 70px !important;
+}
+
+.barNow{
+    order: 3 !important;
+    flex: 1 !important;
+    padding: 0 10px !important;
+    text-align: left !important;
+    font-size: 111% !important;
+}
+
+.barNext{
+    order: 4 !important;
+    flex: 1 !important;
+    padding: 0 10px !important;
+    text-align: left !important;
+    font-size: 113% !important;
+}
+
+.barNow h5, .barNext h5{
+    margin-bottom: 6.5px;
+}
+
+.barNow small, .barNext small{
+    font-size: 9px;
+}
+
+.barChPrev{
+    background-image: url(@/assets/arrow_back.png) !important;
+    background-size: 30px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 60px !important;
+    cursor: pointer;
+    order: 5 !important;
+    filter: invert(47%) sepia(8%) saturate(150%) hue-rotate(191deg) brightness(94%) contrast(90%);
+}
+
+.barChNext{
+    background-image: url(@/assets/arrow_next.png) !important;
+    background-size: 30px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 60px !important;
+    cursor: pointer;
+    order: 5 !important;
+    filter: invert(47%) sepia(8%) saturate(150%) hue-rotate(191deg) brightness(94%) contrast(90%);
+}
+
+.barEPG{
+    background-size: 34px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 60px !important;
+    cursor: pointer;
+    filter: invert(47%) sepia(8%) saturate(150%) hue-rotate(191deg) brightness(94%) contrast(90%);
+}
+
+.barChPrev:hover, .barChNext:hover, .barEPG:hover{
+    filter: invert(100%) sepia(0%) saturate(3%) hue-rotate(123deg) brightness(116%) contrast(100%);
+}
+
+.vjs-theme-fantasy .vjs-volume-bar {
+    margin-top: 1.7em;
+}
+
+.video-js .vjs-control:focus, .video-js .vjs-control:focus:before, .video-js .vjs-control:hover:before{
+    text-shadow: none;
+}
+
+.vjs-modal-dialog .vjs-modal-dialog-content{
+    z-index: 7;
+}
+
+#favourite{
+    background-color: var(--webtv-accent) !important;
+}
+
+#favourite *{
+    color: black !important;
+}
+
+.hidden{
+    display: none !important;
+}
+
+#logomobile+img{
+    display: block;
+}
+
+.va-modal__inner {
+    max-width: 95% !important;
+    padding: 55px 0 0 0 !important;
+}
+
+.va-modal--fullscreen{
+    background: rgba(0,0,0,.1) !important;
+}
+
+.va-modal__close{
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 1.8rem !important;
+}
+
+#buypack, #parentform{
+    height: 150px;
+    margin-bottom: 60px;
+    padding-left: 35px;
+    color: white;
+}
+
+#buypack .md7{
+    padding-left: 1.5rem;
+}
+
+#buypack .md7 p:nth-of-type(2){
+    text-align: justify;
+    font-size: 15.3px;
+    line-height: 1.1;
+}
+
+#parentform{
+    height: auto;
+}
+
+#parentform form{
+    padding-right: 35px;
+}
+
+#parentform input{
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#parentform p{
+    font-size: 15px;
+    white-space: nowrap;
+    padding-right: 55px;
+}
+
+#parentform input+p{
+    color: red;
+    font-size: 13px;
+}
+
+#buypack .xs4{
+    background-color: white;
+}
+
+#buypack a{
+    color: var(--webtv-accent) !important;
+}
+
+.va-modal--size-small{
+    background: #131313 !important;
+}
+
+.va-modal--size-small h3{
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px){
+    .va-navbar{
+        padding: 0 !important;
+    }
+
+    .va-navbar__content{
+        flex-direction: row !important;
+        padding: 0 !important;
+    }
+
+    .va-navbar__content>*{
+        width: auto;
+    }
+
+    #logomobile{
+        display: block;
+    }
+
+    #logomobile+img{
+        display: none;
+    }
+
+    .va-navbar__left{
+        justify-content: flex-start;
+    }
+
+    .va-navbar__right{
+        justify-content: flex-end !important;
+    }
+
+    .vjs-volume-vertical{
+        display: none !important;
+    }
+
+    .barNum{
+        font-size: 3em !important;
+        padding-right: 8px !important;
+    }
+
+    .vjs-theme-fantasy .vjs-control-bar{
+        padding: 13px 10px !important;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    #buypack{
+        margin-top: -40px;
+        padding-left: 15px;
+        height: auto;
+        padding-right: 15px;
+        margin-bottom: 20px;
+    }
+
+    #buypack .md7{
+        padding-left: 0 !important;
+        padding-top: 20px;
+    }
+
+    #buypack .md7 p:nth-of-type(2){
+        text-align: left;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 576px){
+    #userbg .va-button__content{
+        font-size: 0;
+    }
+
+    .barChPrev, .barChNext{
+        font-size: 100% !important;
+        width: 50px !important;
+    }
+
+    .barEPG{
+        width: 40px !important;
+        background-size: 30px !important;
+    }
+
+    .barImg{
+        padding-right: 0 !important;
+    }
+
+    .video-js .vjs-mute-control .vjs-icon-placeholder:before, .vjs-icon-volume-high:before
+    {
+        font-size: 3.9em;
+    }
+
+    .video-js .vjs-fullscreen-control .vjs-icon-placeholder:before, .vjs-icon-fullscreen-enter:before
+    {
+        font-size: 4.8em;
+    }
+    
+    .vjs-volume-panel{
+        margin-right: 0 !important;
+    }
+
+    .video-js .vjs-fullscreen-control {
+        margin-right: 5px !important;
+    }
+
+    #main{
+        height: 85vh;
+    }
+
+    .vjs-theme-fantasy .vjs-control-bar{
+        bottom: 5px;
+        width: 98%;
+        left: 1%;
+        padding: 13px 3px !important;
+    }
+
+    .barNum {
+        font-size: 2.5em !important;
+        padding-right: 6px !important;
+        padding-left: 5px !important;
+    }
+
+    .va-modal--mobile-fullscreen{
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+    }
+
+    #chmenubtn{
+        top: calc(50% - 49px);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    
+    #chmenubtn img{
+        height: 98px;
+    }
+}
+
+@media (max-width: 576px) and (orientation: portrait){
+    .barNext, .barNow{
+        display: none !important;
+    }
+}
+
+@supports (-webkit-touch-callout: none){
+    .vjs-fullscreen-control{
+        display: none !important;
+    }
+
+    .vjs-fullscreen-control[title="Fullscreen"]{
+        display: inline-block !important;
+    }
+}
