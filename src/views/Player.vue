@@ -394,7 +394,7 @@ export default {
             if(!previo.length)
             {
                 const firstch = this.canales[0].sections[0].canales[0];
-                const favExists = this.favoritos.filter(fav=>fav.cn_id == firstch.cn_id).length>0;
+                const favExists = this.favoritos?.filter(fav=>fav.cn_id == firstch.cn_id).length>0;
 
                 this.hideFavBtn = favExists;
                 this.hideDelFavBtn = !favExists;
@@ -513,7 +513,7 @@ export default {
         },
 
         custom_fav_btn(ch){
-            const favExists = this.favoritos.filter(fav=>fav.cn_id == ch.cn_id).length>0;
+            const favExists = this.favoritos?.filter(fav=>fav.cn_id == ch.cn_id).length>0;
 
             const error = this.player.error();
 
@@ -791,7 +791,7 @@ export default {
             if(jsonDel.error){
                 this.delFavClick = false;
                 this.favMsgShow = false;
-                alert(jsonAdd.message);
+                alert(jsonDel.message);
             }
             else{
                 this.favoritos = this.favoritos.filter(item => item.cn_id != this.currentCh.cn_id);
@@ -823,16 +823,16 @@ export default {
         async trashFavo(ev, chid)
         {
             const jsonDel = await this.fetchDelFav(chid);
-
+            
             if(jsonDel.error){
                 alert(jsonAdd.message);
             }
             else{
-                ev.target.closest("a").style.height = 0;
-                ev.target.closest("a").style.display = 'block';
-                ev.target.closest("a").style.pointerEvents = 'none';
-                ev.target.closest("a").style.background = 'rgba(255,0,0,0.2)';
-                ev.target.closest("a").classList.remove('mb-1');
+                ev.target.closest(".channel").style.height = 0;
+                ev.target.closest(".channel").style.display = 'block';
+                ev.target.closest(".channel").style.pointerEvents = 'none';
+                
+                ev.target.closest(".channel").classList.remove('mb-1');
 
                 setTimeout(_ => this.favoritos = this.favoritos.filter(item => item.cn_id != chid), 1678);
             }
