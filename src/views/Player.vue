@@ -5,7 +5,7 @@
                 <img :src="require('@/assets/'+logo)" alt="oneplay logo" class="mt-1" height="35">
             </va-navbar-item>
             <va-navbar-item>
-                <a href="#" class="d-block px-4 py-3 menuitem active">
+                <a href="javascript:" class="d-block px-4 py-3 menuitem active">
                     <img src="../assets/tv.png" alt="Icono de TV" class="d-block svgicon pb-1" height="24">
                     <span>TV</span>
                 </a>

@@ -1,7 +1,7 @@
 {
-  "name": "oneplay_colombia",
-  "productName": "Oneplay Colombia",
-  "version": "7.3.6",
+  "name": "yahvenet",
+  "productName": "Yahvenet",
+  "version": "2.0.23",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
