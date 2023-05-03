@@ -82,7 +82,7 @@ export default {
     }
 
     #mancol{
-        background-image: url('https://artacuri.dev/trapemn/imgrepo/man.jpg');
+        background-image: url('https://trapemn.tv/assets/webtv/man.jpg');
         background-position-x: right;
         background-size: cover;
     }
@@ -135,7 +135,7 @@ export default {
         #mancol{display: none;}
 
         #mancol+div{
-            background-image: url('https://artacuri.dev/trapemn/imgrepo/man.jpg');
+            background-image: url('https://trapemn.tv/assets/webtv/man.jpg');
             background-size: cover;
             background-position-x: right;
         }
