@@ -46,7 +46,7 @@ export default {
     },
     beforeCreate(){
         const localKeys = Object.keys(localStorage);
-        const loginKeys = ['vaun','mail','devid','user','ipe','jwt2'];
+        const loginKeys = ['vaun','mail','devid','user','jwt2'];
         if(loginKeys.every(el=>localKeys.includes(el))) this.$router.replace({name: "player"});
     },
     methods:{

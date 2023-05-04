@@ -12,9 +12,6 @@ export default function()
 {
     const login = async (user, pass) =>
     {
-        const fetchIp = await fetch('https://httpbin.org/ip');
-        const ipData = await fetchIp.json();
-
         const aes_encrypt = (str_to_encrypt) => {
             const key = CryptoJS.enc.Utf8.parse("Groupalnetpro22.");
             const iv = CryptoJS.enc.Utf8.parse("Groupalnetpro22.");
@@ -28,7 +25,12 @@ export default function()
 
         formData.append('user', user);
         formData.append('pass', pass);
-        if(process.env.VUE_APP_ENVIAR_IP) formData.append('networkid', aes_encrypt(ipData.origin));
+
+        if(process.env.VUE_APP_ENVIAR_IP) {
+            const fetchIp = await await fetch('https://httpbin.org/ip');
+            const ipData = await fetchIp.json();
+            formData.append('networkid', aes_encrypt(ipData.origin));
+        }
 
         const response = await fetch(url,{method:'POST', body:formData});
 
@@ -44,7 +46,6 @@ export default function()
                 localStorage.mail  = user;
                 localStorage.devid = fingerid;
                 localStorage.user  = udata.user;
-                localStorage.ipe = ipData.origin;
                 localStorage.jwt2  = CryptoJS.AES.encrypt(pass, crkey).toString();
 
                 return {"msg": "Welcome", "status": true};
