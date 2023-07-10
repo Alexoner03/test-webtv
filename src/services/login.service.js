@@ -10,9 +10,11 @@ export default function()
         const loginKeys = ['logindate','mail','mac','user','cliente','jwt2'];
         const currUnix  = Math.floor(Date.now() / 1000);
 
-        return  loginKeys.every(el=>localKeys.includes(el)) &&
-                localStorage.cliente == process.env.VUE_APP_CLIENTE &&
-                currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH*3600;
+        isLogged.value = loginKeys.every(el=>localKeys.includes(el)) &&
+                        localStorage.cliente == process.env.VUE_APP_CLIENTE &&
+                        currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH*3600;
+
+        return isLogged.value;
     }
 
     const login = async (user, pass, mac) =>
