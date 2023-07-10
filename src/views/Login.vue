@@ -44,12 +44,23 @@ export default {
             logo: process.env.VUE_APP_LOGO
         }
     },
-    beforeCreate(){
+    beforeCreate() {
         const localKeys = Object.keys(localStorage);
         const loginKeys = ['vaun','mail','devid','user','jwt2'];
+        const searchParams = new URLSearchParams(window.location.search);
+
+        let sover = searchParams.get('sover');
+        const firstDotIndex = sover.indexOf(".");
+        const secondDotIndex = sover.indexOf(".", firstDotIndex + 1);
+
+        sover = secondDotIndex !== -1 ? sover.slice(0, secondDotIndex) : sover;
+
+        localStorage.mac = searchParams.get('mac');
+        localStorage.ssl = parseFloat(sover) >= 11 ? 1 : 0;
+
         if(loginKeys.every(el=>localKeys.includes(el))) this.$router.replace({name: "player"});
     },
-    methods:{
+    methods: {
         async inicioSesion() {
             const {login} = loginService();
 
@@ -131,7 +142,8 @@ export default {
         font-size: .81rem;
     }
 
-    @media (max-width:768px) {
+    @media (max-width:768px)
+    {
         #mancol{display: none;}
 
         #mancol+div{

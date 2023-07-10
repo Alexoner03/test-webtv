@@ -642,7 +642,8 @@ export default {
             }
         },
 
-        playChannel(ch, favlist, showFavBtn) {
+        playChannel(ch, favlist, showFavBtn)
+        {
             this.favMsgShow = false;
 
             if (favlist) {
@@ -719,13 +720,14 @@ export default {
             this.nextCh = chList[(currPosCh + 1) % totch];
 
             if (ch?.cn_id) {
-                this.playChId = ch.cn_id;
                 this.currentCh = ch;
+                this.playChId  = ch.cn_id;
+
+                const churl = Boolean(parseInt(localStorage.ssl)) ? ch.url : ch.url.replace('https:', 'http:').replace(':1936', ':1935');
 
                 this.player.src({
                     type: 'application/x-mpegURL',
-                    src: (ch?.wms == 1 && ch?.cdn == 1) ? ch.url + '?wmsAuthSign=' + this.wmskey : ch.url
-                    //src: ch.url.replace('https:', 'http:').replace(':1936', ':1935')
+                    src: (ch?.wms == 1 && ch?.cdn == 1) ? churl + '?wmsAuthSign=' + this.wmskey : churl
                 });
 
                 this.chNumtext.innerHTML = ch.numero;
@@ -749,7 +751,6 @@ export default {
             this.addFavClick = true;
 
             this.player.userActive(true);
-            let keepActive = setInterval(_ => this.player.userActive(true), 2000);
 
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -769,9 +770,6 @@ export default {
             const fetchAdd = await fetch(process.env.VUE_APP_API_URL + "api/set-favorite", requestOptions);
             const jsonAdd = await fetchAdd.json();
 
-            this.player.userActive(true);
-            clearInterval(keepActive);
-
             if (jsonAdd.error) {
                 this.addFavClick = false;
                 this.favMsgShow = false;
@@ -780,6 +778,8 @@ export default {
             else {
                 this.favoritos.push(this.currentCh);
             }
+
+            setTimeout(_=> this.player.userActive(false),2000);
         },
 
         async delFromFavs() {
@@ -787,12 +787,8 @@ export default {
             this.delFavClick = true;
 
             this.player.userActive(true);
-            let keepActive = setInterval(_ => this.player.userActive(true), 2000);
 
             const jsonDel = await this.fetchDelFav(this.currentCh.cn_id);
-
-            this.player.userActive(true);
-            clearInterval(keepActive);
 
             if (jsonDel.error) {
                 this.delFavClick = false;
@@ -802,6 +798,8 @@ export default {
             else {
                 this.favoritos = this.favoritos.filter(item => item.cn_id != this.currentCh.cn_id);
             }
+
+            setTimeout(_=> this.player.userActive(false),2000);
         },
 
         async fetchDelFav(chid) {

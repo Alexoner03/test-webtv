@@ -1,6 +1,6 @@
 {
-  "name": "yahvenet",
-  "productName": "Yahvenet",
+  "name": "inventa",
+  "productName": "Inventa",
   "version": "2.0.23",
   "private": true,
   "scripts": {
@@ -18,9 +18,11 @@
     "clientjs": "^0.2.1",
     "core-js": "^3.8.3",
     "crypto-js": "^4.1.1",
+    "macaddress": "^0.5.3",
     "moment": "^2.29.4",
+    "network": "^0.6.1",
     "postcss-preset-env": "^7.8.2",
-    "video.js": "^7.9.7",
+    "video.js": "^7.6.6",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuestic-ui": "^1.4.10"
