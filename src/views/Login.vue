@@ -46,8 +46,8 @@ export default {
         }
     },
     beforeCreate() {
-        const {validLogin} = loginService();
-
+        const {validateLogin, isLogged} = loginService();
+        
         this.searchParams = Object.fromEntries(Array.from((new URLSearchParams(window.location.search)).entries()));
         
         let sover = this.searchParams.sover;
@@ -56,7 +56,9 @@ export default {
         sover = secondDotIndex !== -1 ? sover.slice(0, secondDotIndex) : sover;
         localStorage.ssl = parseFloat(sover) >= 20 ? 1 : 0;
 
-        if(validLogin) this.$router.replace({name: "player"});
+        validateLogin();
+
+        if(isLogged.value) this.$router.replace({name: "player"});
     },
     methods: {
         async inicioSesion() {

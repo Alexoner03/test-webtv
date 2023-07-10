@@ -4,7 +4,7 @@ const isLogged = ref(false);
 
 export default function()
 {
-    const validLogin = _=>
+    const validateLogin = _=>
     {
         const localKeys = Object.keys(localStorage);
         const loginKeys = ['logindate','mail','mac','user','cliente','jwt2'];
@@ -13,8 +13,6 @@ export default function()
         isLogged.value = loginKeys.every(el=>localKeys.includes(el)) &&
                         localStorage.cliente == process.env.VUE_APP_CLIENTE &&
                         currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH*3600;
-
-        return isLogged.value;
     }
 
     const login = async (user, pass, mac) =>
@@ -57,8 +55,8 @@ export default function()
     }
 
     return {
-        validLogin,
         login,
-        isLogged
+        isLogged,
+        validateLogin
     }
 }
