@@ -21,7 +21,7 @@ module.exports = defineConfig({
           target: "dmg",
           category: "com.webtv.application",
           icon: "./icons/icon.icns",
-          artifactName: "Oneplay.${ext}"
+          artifactName: process.env.VUE_APP_CLIENTE+".${ext}"
         },
         dmg: {
           background : "./public/background.png",

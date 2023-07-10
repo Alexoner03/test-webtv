@@ -56,7 +56,7 @@ export default {
         sover = secondDotIndex !== -1 ? sover.slice(0, secondDotIndex) : sover;
 
         localStorage.mac = searchParams.get('mac');
-        localStorage.ssl = parseFloat(sover) >= 11 ? 1 : 0;
+        localStorage.ssl = parseFloat(sover) >= 20 ? 1 : 0;
 
         if(loginKeys.every(el=>localKeys.includes(el))) this.$router.replace({name: "player"});
     },

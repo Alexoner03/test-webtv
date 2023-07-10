@@ -52,7 +52,7 @@ async function createWindow() {
     macaddress.one(obj.name, function (_, mac) 
     {
       const strmac = mac.replace(/:/g, "");
-      const sover  = process.platform == 'darwin' ? require('os').release() : '11';
+      const sover  = process.platform == 'darwin' ? require('os').release() : '20';
 
       if (process.env.WEBPACK_DEV_SERVER_URL) {
         win.loadURL(process.env.WEBPACK_DEV_SERVER_URL+'?mac='+strmac+'&sover='+sover)
