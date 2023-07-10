@@ -1,52 +1,46 @@
 import {ref} from "vue";
-import {ClientJS} from 'clientjs';
 import CryptoJS from 'crypto-js';
-
-const client = new ClientJS();
-const fingerid = client.getFingerprint();
-
-const loginref = 'devid' in localStorage && localStorage.devid == fingerid;
-const isLogged = ref(loginref);
+const isLogged = ref(false);
 
 export default function()
 {
-    const login = async (user, pass) =>
+    const validLogin = _=>
     {
-        const aes_encrypt = (str_to_encrypt) => {
-            const key = CryptoJS.enc.Utf8.parse("Groupalnetpro22.");
-            const iv = CryptoJS.enc.Utf8.parse("Groupalnetpro22.");
+        const localKeys = Object.keys(localStorage);
+        const loginKeys = ['logindate','mail','mac','user','cliente','jwt2'];
+        const currUnix  = Math.floor(Date.now() / 1000);
 
-            const encrypted = CryptoJS.AES.encrypt(str_to_encrypt, key, {'mode':CryptoJS.mode.CBC, iv:iv});
-            return encrypted.toString();
-        };        
-        
+        return  loginKeys.every(el=>localKeys.includes(el)) &&
+                localStorage.cliente == process.env.VUE_APP_CLIENTE &&
+                currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH*3600;
+    }
+
+    const login = async (user, pass, mac) =>
+    {
         const formData = new FormData();
-        const url = process.env.VUE_APP_API_URL+'/api/get-web';
+        const url = process.env.VUE_APP_API_URL+'api/get-web';
 
         formData.append('user', user);
         formData.append('pass', pass);
+        formData.append('devid', mac);
 
-        if(process.env.VUE_APP_ENVIAR_IP) {
-            const fetchIp = await await fetch('https://httpbin.org/ip');
-            const ipData = await fetchIp.json();
-            formData.append('networkid', aes_encrypt(ipData.origin));
-        }
-
-        const response = await fetch(url,{method:'POST', body:formData});
+        const response = await fetch(url, {method:'POST', body:formData});
 
         if (response.ok)
         {            
             const udata = await response.json();
+            const crkey = localStorage.mac + "lasindy24";
             
-            if(udata.user){
-                isLogged.value = true;
-                const crkey =  fingerid*1 + (new Date().setHours(24,0,0,0) / 1000) + "lasindy";
+            if(udata.user)
+            {              
+                localStorage.mac = mac;  
+                localStorage.mail = user;
+                localStorage.user = udata.user;
+                localStorage.cliente = process.env.VUE_APP_CLIENTE;
+                localStorage.logindate = Math.floor(Date.now() / 1000);
+                localStorage.jwt2 = CryptoJS.AES.encrypt(pass, crkey).toString();
 
-                localStorage.vaun  = 0;
-                localStorage.mail  = user;
-                localStorage.devid = fingerid;
-                localStorage.user  = udata.user;
-                localStorage.jwt2  = CryptoJS.AES.encrypt(pass, crkey).toString();
+                isLogged.value = true;
 
                 return {"msg": "Welcome", "status": true};
             }
@@ -55,13 +49,14 @@ export default function()
             }
         }  
         else{
-            const message = `An error has occured: ${response.status}`;
+            const message = `Error: ${response.status}`;
             throw new Error(message);
         }
     }
 
     return {
-        isLogged,
-        login
+        validLogin,
+        login,
+        isLogged
     }
 }

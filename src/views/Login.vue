@@ -31,7 +31,7 @@
 </template>
 
 <script> 
-import loginService from '@/services/login.service'
+import loginService from '../services/login.service'
 
 export default {
     data(){
@@ -41,31 +41,29 @@ export default {
             alertMsg: '',
             check: false,
             showAlert: false,
-            logo: process.env.VUE_APP_LOGO
+            logo: process.env.VUE_APP_LOGO,
+            searchParams: {}
         }
     },
     beforeCreate() {
-        const localKeys = Object.keys(localStorage);
-        const loginKeys = ['vaun','mail','devid','user','jwt2'];
-        const searchParams = new URLSearchParams(window.location.search);
+        const {validLogin} = loginService();
 
-        let sover = searchParams.get('sover');
+        this.searchParams = Object.fromEntries(Array.from((new URLSearchParams(window.location.search)).entries()));
+        
+        let sover = this.searchParams.sover;
         const firstDotIndex = sover.indexOf(".");
         const secondDotIndex = sover.indexOf(".", firstDotIndex + 1);
-
         sover = secondDotIndex !== -1 ? sover.slice(0, secondDotIndex) : sover;
-
-        localStorage.mac = searchParams.get('mac');
         localStorage.ssl = parseFloat(sover) >= 20 ? 1 : 0;
 
-        if(loginKeys.every(el=>localKeys.includes(el))) this.$router.replace({name: "player"});
+        if(validLogin) this.$router.replace({name: "player"});
     },
     methods: {
         async inicioSesion() {
             const {login} = loginService();
 
             try {
-                const result = await login(this.user,this.pass);
+                const result = await login(this.user,this.pass,this.searchParams.mac);
 
                 if(result.status){
                     this.$router.replace({name: "player"});
@@ -76,7 +74,6 @@ export default {
                 }
             }
             catch (error) {
-                console.log(error);
                 this.showAlert = true;
                 this.alertMsg = "Error al conectarse con el servicio de inicio de sesión, contacte al administrador";
             }

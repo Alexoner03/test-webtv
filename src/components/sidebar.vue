@@ -359,6 +359,7 @@
 
 <script setup>
   import useProfileService from "../services/profile.service"
+  import loginService from '../services/login.service'
   import {reactive, ref} from "vue";
   import {useRouter} from "vue-router";
 
@@ -425,6 +426,8 @@
 
     const actions = {
       logoutConfirm(){
+        const {isLogged} = loginService();
+        isLogged.value = false;
         localStorage.clear();
         router.replace({name: 'login'})
       },

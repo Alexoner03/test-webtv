@@ -179,6 +179,8 @@ import '../assets/css/player.css';
 import Trunquee from '../components/Trunquee.vue';
 import Sidebar from '../components/sidebar.vue';
 import Epg from '../components/Epg.vue';
+import loginService from '../services/login.service';
+
 import CryptoJS from 'crypto-js';
 import videojs from 'video.js';
 import bcrypt from 'bcryptjs';
@@ -189,56 +191,34 @@ export default {
     },
 
     async created() {
-        this.username = localStorage.user;
-        
-        const limit = localStorage.vaun * 1 || (new Date().setHours(24, 0, 0, 0) / 1000);
-        const cryptpass = localStorage.devid * 1 + limit + "lasindy";
         let pass = false;
+        try{ pass = CryptoJS.AES.decrypt(localStorage.jwt2, localStorage.mac + "lasindy24").toString(CryptoJS.enc.Utf8) }
+        catch(e){}
 
-        try {
-            pass = CryptoJS.AES.decrypt(localStorage.jwt2, cryptpass).toString(CryptoJS.enc.Utf8);
-        }
-        catch (e) { console.log(e); }
-
-        if (pass) {
-            const aes_encrypt = (str_to_encrypt) => {
-                const key = CryptoJS.enc.Utf8.parse("Groupalnetpro22.");
-                const iv = CryptoJS.enc.Utf8.parse("Groupalnetpro22.");
-
-                const encrypted = CryptoJS.AES.encrypt(str_to_encrypt, key, { 'mode': CryptoJS.mode.CBC, iv: iv });
-                return encrypted.toString();
-            };
-
-            this.loginData.append("pass", pass);
-            this.loginData.append("user", localStorage.mail);
-
-            if (process.env.VUE_APP_ENVIAR_IP) {
-                const fetchIp = await fetch('https://httpbin.org/ip');
-                const ipData  = await fetchIp.json();
-                this.loginData.append('networkid', aes_encrypt(ipData.origin));
-            }
-
-            const favoData = new FormData();
-            favoData.append("user_email", localStorage.mail);
-
-            const fetchFavos = await fetch(process.env.VUE_APP_API_URL + 'api/get-favorite', { method: 'POST', body: favoData, redirect: 'follow' });
-            const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web', { method: 'POST', body: this.loginData });
-
-            const jsonFavos = await fetchFavos.json();
-            const jsonCanal = await fetchCanal.json();
-
-            this.wmskey = jsonCanal?.wmstoken;
-            this.favoritos = jsonFavos.channels;
-            this.canales = jsonCanal.sections;
-            this.parentHash = jsonCanal.parentlockcode;
-            this.premiumsAllow = jsonCanal.premiumsallowed;
-            this.leyendaPremium = jsonCanal?.leyendapremium ?? 'Contrata nuestros paquetes de canales premium y disfruta del mejor contenido.';
-        }
-        else {
+        if(!pass){
             localStorage.clear();
-            console.log("Error de reautenticación");
             this.$router.replace({ name: "login" });
         }
+
+        this.username = localStorage.user;
+        this.loginData.append("pass", pass);
+        this.loginData.append("user", localStorage.mail);
+        this.loginData.append("devid", localStorage.mac);
+
+        const favoData = new FormData();
+        favoData.append("user_email", localStorage.mail);
+
+        const fetchFavos = await fetch(process.env.VUE_APP_API_URL + 'api/get-favorite', { method: 'POST', body: favoData, redirect: 'follow' });
+        const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web', { method: 'POST', body: this.loginData });
+
+        const jsonFavos = await fetchFavos.json();
+        const jsonCanal = await fetchCanal.json();
+
+        this.favoritos = jsonFavos.channels;
+        this.canales = jsonCanal.sections;
+        this.parentHash = jsonCanal.parentlockcode;
+        this.premiumsAllow = jsonCanal.premiumsallowed;
+        this.leyendaPremium = jsonCanal?.leyendapremium ?? 'Contrata nuestros paquetes de canales premium y disfruta del mejor contenido.';
     },
 
     mounted() {
@@ -428,7 +408,6 @@ export default {
 
                     if (jsonCanal.message == 'Servicio deshabilitado') { this.$router.replace({ name: "login" }); return; }
 
-                    this.wmskey = jsonCanal?.wmstoken;
                     this.favoritos = jsonFavos.channels;
                     this.canales = jsonCanal.sections;
                     this.premiumsAllow = jsonCanal.premiumsallowed;
@@ -511,7 +490,6 @@ export default {
             showParentalModal: false,
             parentHash: '',
             parentalChReq: null,
-            wmskey: '',
             badParental: false,
             premiumsAllow: [],
             logo: process.env.VUE_APP_LOGO,
@@ -523,7 +501,11 @@ export default {
 
     methods: {
         logout() {
+            const {isLogged} = loginService();
+            isLogged.value = false;
+
             localStorage.clear();
+
             this.$router.replace({ name: "login" });
         },
 
@@ -697,21 +679,6 @@ export default {
                 return;
             }
 
-            if (favlist && this.wmskey) {
-                let favwms;
-
-                function findInObject(o, f) {
-                    return Object.keys(o).some(function (a) {
-                        if (Array.isArray(o[a]) || typeof o[a] === 'object' && o[a] !== null) return findInObject(o[a], f);
-                        favwms = o['wms'];
-                        return o[a] === f;
-                    });
-                }
-
-                findInObject(this.canales, ch.cn_id);
-                ch.wms = favwms;
-            }
-
             const chList = favlist ? this.favoritos : this.playGroup;
             const currPosCh = chList.findIndex(cha => cha.cn_id == ch.cn_id);
             const totch = chList.length;
@@ -727,7 +694,7 @@ export default {
 
                 this.player.src({
                     type: 'application/x-mpegURL',
-                    src: (ch?.wms == 1 && ch?.cdn == 1) ? churl + '?wmsAuthSign=' + this.wmskey : churl
+                    src : churl
                 });
 
                 this.chNumtext.innerHTML = ch.numero;

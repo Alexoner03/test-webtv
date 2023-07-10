@@ -1,7 +1,7 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Player from '../views/Player.vue'
 import Login from '../views/Login.vue'
-import loginService from '@/services/login.service'
+import loginService from '../services/login.service'
 
 const routes = [
   {
