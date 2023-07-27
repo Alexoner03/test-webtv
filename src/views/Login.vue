@@ -42,15 +42,15 @@ export default {
             check: false,
             showAlert: false,
             logo: process.env.VUE_APP_LOGO,
-            searchParams: {}
+            queryParams: null
         }
     },
-    beforeCreate() {
+    created() {
         const {validateLogin, isLogged} = loginService();
         
-        this.searchParams = Object.fromEntries(Array.from((new URLSearchParams(window.location.search)).entries()));
-        
-        let sover = this.searchParams.sover;
+        this.queryParams = new URLSearchParams(window.location.search);
+
+        let sover = this.queryParams.get('sover');
         const firstDotIndex = sover.indexOf(".");
         const secondDotIndex = sover.indexOf(".", firstDotIndex + 1);
         sover = secondDotIndex !== -1 ? sover.slice(0, secondDotIndex) : sover;
@@ -65,7 +65,7 @@ export default {
             const {login} = loginService();
 
             try {
-                const result = await login(this.user,this.pass,this.searchParams.mac);
+                const result = await login(this.user,this.pass,this.queryParams.get('mac'));
 
                 if(result.status){
                     this.$router.replace({name: "player"});

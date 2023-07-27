@@ -204,6 +204,7 @@ export default {
         this.loginData.append("pass", pass);
         this.loginData.append("user", localStorage.mail);
         this.loginData.append("devid", localStorage.mac);
+        this.loginData.append("token", localStorage.token); //en la versión antigua de get-web este parametro es undefined
 
         const favoData = new FormData();
         favoData.append("user_email", localStorage.mail);

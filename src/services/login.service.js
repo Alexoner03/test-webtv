@@ -7,7 +7,7 @@ export default function()
     const validateLogin = _=>
     {
         const localKeys = Object.keys(localStorage);
-        const loginKeys = ['logindate','mail','mac','user','cliente','jwt2'];
+        const loginKeys = ['logindate','mail','mac','user','cliente','jwt2','token'];
         const currUnix  = Math.floor(Date.now() / 1000);
 
         isLogged.value = loginKeys.every(el=>localKeys.includes(el)) &&
@@ -28,14 +28,15 @@ export default function()
 
         if (response.ok)
         {            
+            const crkey = mac + "lasindy24";
             const udata = await response.json();
-            const crkey = localStorage.mac + "lasindy24";
             
             if(udata.user)
-            {              
-                localStorage.mac = mac;  
+            {
+                localStorage.mac = mac;
                 localStorage.mail = user;
                 localStorage.user = udata.user;
+                localStorage.token = udata.token;
                 localStorage.cliente = process.env.VUE_APP_CLIENTE;
                 localStorage.logindate = Math.floor(Date.now() / 1000);
                 localStorage.jwt2 = CryptoJS.AES.encrypt(pass, crkey).toString();

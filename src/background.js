@@ -4,7 +4,6 @@ import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import network from 'network'
-import macaddress from 'macaddress'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -49,20 +48,17 @@ async function createWindow() {
 
   network.get_active_interface(function(err, obj)
   {
-    macaddress.one(obj.name, function (_, mac) 
-    {
-      const strmac = mac.replace(/:/g, "");
-      const sover  = process.platform == 'darwin' ? require('os').release() : '20';
+    const strmac = obj.mac_address.replace(/:/g, "");
+    const sover  = process.platform == 'darwin' ? require('os').release() : '20';
 
-      if (process.env.WEBPACK_DEV_SERVER_URL) {
-        win.loadURL(process.env.WEBPACK_DEV_SERVER_URL+'?mac='+strmac+'&sover='+sover)
-        if (!process.env.IS_TEST) win.webContents.openDevTools()
-      } 
-      else {
-        createProtocol('app')
-        win.loadURL('app://./index.html?mac='+strmac+'&sover='+sover)
-      }
-    });
+    if (process.env.WEBPACK_DEV_SERVER_URL) {
+      win.loadURL(process.env.WEBPACK_DEV_SERVER_URL+'?mac='+strmac+'&sover='+sover)
+      if (!process.env.IS_TEST) win.webContents.openDevTools()
+    } 
+    else {
+      createProtocol('app')
+      win.loadURL('app://./index.html?mac='+strmac+'&sover='+sover)
+    }
   })
 }
 
