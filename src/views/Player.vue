@@ -97,7 +97,7 @@
         </va-sidebar>
 
         <template v-if="sidebarCanEnabled">
-            <sidebar :show="sidebarRightActive"></sidebar>
+            <sidebar :show="sidebarRightActive" :fono="fono_soporte" :correo="correo_soporte" :plan="plan_actual"></sidebar>
         </template>
 
         <va-button outline id="delerfav" class="favbtn" :rounded="false" text-color="#ffffff" style="border-color: #ffffff;"
@@ -210,7 +210,7 @@ export default {
         favoData.append("user_email", localStorage.mail);
 
         const fetchFavos = await fetch(process.env.VUE_APP_API_URL + 'api/get-favorite', { method: 'POST', body: favoData, redirect: 'follow' });
-        const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web', { method: 'POST', body: this.loginData });
+        const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web2', { method: 'POST', body: this.loginData });
 
         const jsonFavos = await fetchFavos.json();
         const jsonCanal = await fetchCanal.json();
@@ -220,6 +220,10 @@ export default {
         this.parentHash = jsonCanal.parentlockcode;
         this.premiumsAllow = jsonCanal.premiumsallowed;
         this.leyendaPremium = jsonCanal?.leyendapremium ?? 'Contrata nuestros paquetes de canales premium y disfruta del mejor contenido.';
+    
+        this.fono_soporte = jsonCanal.fono_soporte;
+        this.correo_soporte = jsonCanal.email_soporte;
+        this.plan_actual = jsonCanal.plan;
     },
 
     mounted() {
@@ -404,7 +408,7 @@ export default {
                     const fetchFavos = await fetch(process.env.VUE_APP_API_URL + 'api/get-favorite', { method: 'POST', body: favoData, redirect: 'follow' });
                     const jsonFavos = await fetchFavos.json();
 
-                    const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web', { method: 'POST', body: this.loginData });
+                    const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web2', { method: 'POST', body: this.loginData });
                     const jsonCanal = await fetchCanal.json();
 
                     if (jsonCanal.message == 'Servicio deshabilitado') { this.$router.replace({ name: "login" }); return; }
@@ -412,6 +416,10 @@ export default {
                     this.favoritos = jsonFavos.channels;
                     this.canales = jsonCanal.sections;
                     this.premiumsAllow = jsonCanal.premiumsallowed;
+
+                    this.fono_soporte = jsonCanal.fono_soporte;
+                    this.correo_soporte = jsonCanal.email_soporte;
+                    this.plan_actual = jsonCanal.plan;
 
                     if (jsonCanal.parentlockcode != this.parentHash) {
                         this.parentHash == jsonCanal.parentlockcode;
@@ -455,6 +463,9 @@ export default {
 
     data() {
         return {
+            fono_soporte: '+56 9 123456789',
+            correo_soporte: 'support@company.net',
+            plan_actual: 'Básico',
             sidebarCanEnabled: process.env.VUE_APP_SIDEBAR_ENABLED === "enable",
             sidebarRightActive: false,
             num: 0,
@@ -515,10 +526,7 @@ export default {
 
             const error = this.player.error();
 
-            if (error) {
-                console.log(error);
-            }
-            else {
+            if (!error) {
                 this.hideFavBtn = favExists;
                 this.hideDelFavBtn = !favExists;
             }

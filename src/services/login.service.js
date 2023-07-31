@@ -18,7 +18,7 @@ export default function()
     const login = async (user, pass, mac) =>
     {
         const formData = new FormData();
-        const url = process.env.VUE_APP_API_URL+'api/get-web';
+        const url = process.env.VUE_APP_API_URL+'api/get-web2';
 
         formData.append('user', user);
         formData.append('pass', pass);
@@ -43,10 +43,10 @@ export default function()
 
                 isLogged.value = true;
 
-                return {"msg": "Welcome", "status": true};
+                return {"status": true};
             }
             else{
-                return {"msg": "Credenciales incorrectas", "status": false};
+                return {"msg": udata.message??"No se pudo iniciar sesión, inténtelo más tarde.", "status": false};
             }
         }  
         else{

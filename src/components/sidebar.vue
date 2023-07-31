@@ -70,7 +70,7 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item class="mb-4">
+      <!-- <va-sidebar-item class="mb-4">
         <va-sidebar-item-content>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem" class="title mb-2">Vigencia</p>
@@ -78,8 +78,8 @@
             <p style="margin-left: 1rem">Hasta {{planInfo.vigency.to}}</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
-      </va-sidebar-item>
-      <va-sidebar-item @click="page = 'other_plans'">
+      </va-sidebar-item> -->
+      <va-sidebar-item @click="getAction('soon')"><!-- page = 'other_plans' -->
         <va-sidebar-item-content>
           <va-icon style="margin-left: 1rem" name="dvr" />
           <va-sidebar-item-title>
@@ -91,7 +91,7 @@
         <va-sidebar-item-content>
           <va-sidebar-item-title style="max-width: 80%">
             <p style="margin-left: 1rem; white-space: normal; word-break: normal">
-              Para contratar algún Plan, favor contactar a plan@planes.com
+              Para contratar algún Plan, favor contactar a:<br><br> {{ correo }}
             </p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
@@ -226,18 +226,18 @@
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="title mb-4">¿Desea desvincular este dispositivo de la cuenta?</p>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="mb-4">
-              *Recuerde que si usted se desvincular, no podrá seguir accediendo a los contenidos de esta cuenta
+              *Recuerde que si usted se desvincula, liberará un cupo para que otro dispositivo pueda vincularse a la cuenta.
             </p>
             <div>
               <div style="margin-left: 1rem;" class="mb-4">
-<!--                TODO: CAMBIAR EL ACTION POR EL DE DESVINCULAR-->
                 <va-button
                     size="large"
                     color="secondary"
                     style="width: 80px"
                     class="mr-4"
+                    :loading="desasociando"
                     round
-                    @click="getAction('logoutConfirm')"
+                    @click="getAction('disassociateAccount')"
                 >
                   Si
                 </va-button>
@@ -276,8 +276,8 @@
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal; text-transform: unset" class="title mb-4">Si desea desvincular otro dispositivo debe solicitarlo al:</p>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="mb-4">
-              whatsapp: +56 9 876567898 <br>
-              contacto@contacto.com
+              Tel: {{ fono }} <br>
+              {{ correo }}
             </p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
@@ -301,8 +301,8 @@
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal; text-transform: unset" class="title mb-4">Si desea obtener su código control parental, debe solicitarlo al:</p>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="mb-4">
-              whatsapp: +56 9 876567898 <br>
-              contacto@contacto.com
+              Tel: {{ fono }} <br>
+              {{ correo }}
             </p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
@@ -367,9 +367,22 @@
     show: {
       type: Boolean,
       default: false,
-    }
+    },
+    fono: {
+      type: String,
+      default: "+56 9 123456789",
+    },
+    correo: {
+      type: String,
+      default: "support@company.net",
+    },
+    plan: {
+      type: String,
+      default: "Básico",
+    },
   })
 
+  const desasociando = ref(false);
   const profileService = useProfileService()
   const router = useRouter()
   const items = ref([])
@@ -396,23 +409,22 @@
   })
 
   profileService.getProfileInfo().then((_info) => {
-    profileInfo.name = _info.name
-    profileInfo.email = _info.email
+    profileInfo.name = localStorage.user
+    profileInfo.email = localStorage.mail
   })
 
   profileService.getPlanInfo().then((_info) => {
-    planInfo.associatedPlan = _info.associatedPlan
+    planInfo.associatedPlan = props.plan
     planInfo.vigency = _info.vigency
     planInfo.other_plans = _info.other_plans
   })
 
-
-  const getAction = (actionName) => {
-
+  const getAction = (actionName) =>
+  {
     const pages = [
       "profile",
       "plan",
-      "change_password",
+      //"change_password",
       "disable_account",
       "parental_control",
       "logout",
@@ -425,6 +437,21 @@
     }
 
     const actions = {
+      async disassociateAccount(){
+        desasociando.value = true;
+        const reqData = new FormData();
+        reqData.append("token", localStorage.token);
+        const req = await fetch(process.env.VUE_APP_API_URL + 'api/desvincular', { method: 'POST', body: reqData, redirect: 'follow' }); 
+        const res = await req.json();
+
+        if(res.error){
+          alert("Error al desvincular cuenta, inténtelo más tarde");
+          desasociando.value = false;
+        }
+        else{
+          this.logoutConfirm();
+        }
+      },
       logoutConfirm(){
         const {isLogged} = loginService();
         isLogged.value = false;
@@ -435,6 +462,9 @@
         touchChangePassword.value = true
         changingPassword.value = true
         profileService.changePassword(emailAssociated.value).then(() => changingPassword.value = false)
+      },
+      soon(){
+        alert("Disponible en breve")
       }
     }
 

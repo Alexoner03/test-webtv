@@ -5,7 +5,7 @@ export default function () {
             resolve([
                 {action: "profile", title: "Perfil", icon: "account_box"},
                 {action: "plan", title: "Mi plan", icon: "dvr"},
-                {action: "change_password", title: "Cambiar contraseña", icon: "lock"},
+                //{action: "change_password", title: "Cambiar contraseña", icon: "lock"},
                 {action: "disable_account", title: "Desvincular cuenta", icon: "disabled_by_default"},
                 {action: "parental_control", title: "Control parental", icon: "supervisor_account"},
                 {action: "logout", title: "Cerrar sesión", icon: "logout"},

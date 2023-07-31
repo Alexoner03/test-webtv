@@ -22,7 +22,7 @@
                         <input type="password" class="form-field" v-model="pass" id="pass" name="pass" placeholder="Ej: XXXXXXXX" required>
                     </div>
                     <div>
-                        <va-button type="submit" size="medium" class="py-2">Ingresar</va-button>
+                        <va-button type="submit" size="medium" class="py-2" :loading="logeando">Ingresar</va-button>
                     </div>
                 </form>
             </div>
@@ -42,7 +42,8 @@ export default {
             check: false,
             showAlert: false,
             logo: process.env.VUE_APP_LOGO,
-            queryParams: null
+            queryParams: null,
+            logeando: false
         }
     },
     created() {
@@ -62,6 +63,7 @@ export default {
     },
     methods: {
         async inicioSesion() {
+            this.logeando = true;
             const {login} = loginService();
 
             try {
@@ -76,8 +78,9 @@ export default {
                 }
             }
             catch (error) {
+                this.logeando = false;
                 this.showAlert = true;
-                this.alertMsg = "Error al conectarse con el servicio de inicio de sesión, contacte al administrador";
+                this.alertMsg = "Error al conectarse con el servicio de inicio de sesión, inténtelo más tarde.";
             }
 
             setTimeout(() => this.showAlert=false, 6000);
