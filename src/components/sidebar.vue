@@ -66,7 +66,7 @@
         <va-sidebar-item-content>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem" class="title">Plan Asociado</p>
-            <p style="margin-left: 1rem">{{planInfo.associatedPlan}}</p>
+            <p style="margin-left: 1rem">{{ planactual }}</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -79,7 +79,7 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item> -->
-      <va-sidebar-item @click="getAction('soon')"><!-- page = 'other_plans' -->
+      <va-sidebar-item @click="page = 'other_plans'">
         <va-sidebar-item-content>
           <va-icon style="margin-left: 1rem" name="dvr" />
           <va-sidebar-item-title>
@@ -110,13 +110,13 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item v-for="plan in planInfo.other_plans" :key="plan.name">
+      <va-sidebar-item v-for="plan in planes" :key="plan.nombre">
         <va-sidebar-item-content>
           <va-sidebar-item-title>
-            <p style="margin-left: 1rem; font-size: 1rem" class="title">{{ plan.name }}</p>
-            <p style="margin-left: 1rem">{{plan.channelsCount}} canales</p>
-            <p style="margin-left: 1rem">{{plan.deviceCount}} dispositivo reproduciendo</p>
-            <p style="margin-left: 1rem">${{plan.amount}} x mes</p>
+            <p style="margin-left: 1rem; font-size: 1rem" class="title">{{ plan.nombre }}</p>
+            <p style="margin-left: 1rem">{{plan.cantidad_canales}} canales</p>
+            <!-- <p style="margin-left: 1rem">{{plan.deviceCount}} dispositivo reproduciendo</p> -->
+            <p style="margin-left: 1rem">{{plan.precio}} x mes</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -376,10 +376,14 @@
       type: String,
       default: "support@company.net",
     },
-    plan: {
-      type: String,
-      default: "Básico",
+    planes: {
+      type: Array, 
+      default: []
     },
+    planactual: {
+      type: String,
+      default: 'Básico'
+    }
   })
 
   const desasociando = ref(false);
@@ -395,14 +399,11 @@
     email: ""
   })
 
-  const planInfo = reactive({
-    associatedPlan: "",
-    vigency: {
-      from : "",
-      to: ""
-    },
-    other_plans: []
-  })
+  // const planInfo = reactive({
+  //   associatedPlan: '',
+  //   vigency: {from : "",to: ""},
+  //   other_plans: ''
+  // })
 
   profileService.getProfileMenu().then((_items) => {
     items.value = _items
@@ -413,11 +414,11 @@
     profileInfo.email = localStorage.mail
   })
 
-  profileService.getPlanInfo().then((_info) => {
-    planInfo.associatedPlan = props.plan
-    planInfo.vigency = _info.vigency
-    planInfo.other_plans = _info.other_plans
-  })
+  // profileService.getPlanInfo().then((_info) => {
+  //   planInfo.associatedPlan = _info.plan
+  //   planInfo.vigency = _info.vigency
+  //   planInfo.other_plans = _info.other_plans
+  // })
 
   const getAction = (actionName) =>
   {

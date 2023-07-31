@@ -97,7 +97,7 @@
         </va-sidebar>
 
         <template v-if="sidebarCanEnabled">
-            <sidebar :show="sidebarRightActive" :fono="fono_soporte" :correo="correo_soporte" :plan="plan_actual"></sidebar>
+            <sidebar :show="sidebarRightActive" :fono="fono_soporte" :correo="correo_soporte" :planes="planes" :planactual="planactual"></sidebar>
         </template>
 
         <va-button outline id="delerfav" class="favbtn" :rounded="false" text-color="#ffffff" style="border-color: #ffffff;"
@@ -223,33 +223,39 @@ export default {
     
         this.fono_soporte = jsonCanal.fono_soporte;
         this.correo_soporte = jsonCanal.email_soporte;
-        this.plan_actual = jsonCanal.plan;
+
+        this.planactual = jsonCanal.plan;
+        this.planes = jsonCanal.planes.map(item => {
+            const [nombre, precio] = item.nombre.split(' - ');
+            item.nombre = nombre; item.precio = precio;
+            return item;
+        });
     },
 
     mounted() {
         this.player = videojs(this.$refs.liveplayer,
-            {
-                html5: {
-                    nativeTextTracks: false,
-                    vhs: {
-                        withCredentials: false
-                    }
-                },
-                languages: {
-                    en: {
-                        "The media playback was aborted due to a corruption problem or because the media used features your browser did not support.": "La señal en estos momentos no está disponible, por favor, inténtelo nuevamente.",
-                        "The media could not be loaded, either because the server or network failed or because the format is not supported.": "La señal en estos momentos no está disponible, por favor, inténtelo nuevamente.",
-                        "No compatible source was found for this media.": "La señal en estos momentos no está disponible, por favor, inténtelo nuevamente."
-                    }
-                },
-                language: 'en',
-                textTrackSettings: false,
-                controlBar: {
-                    volumePanel: {
-                        inline: false
-                    }
+        {
+            html5: {
+                nativeTextTracks: false,
+                vhs: {
+                    withCredentials: false
                 }
-            });
+            },
+            languages: {
+                en: {
+                    "The media playback was aborted due to a corruption problem or because the media used features your browser did not support.": "La señal en estos momentos no está disponible, por favor, inténtelo nuevamente.",
+                    "The media could not be loaded, either because the server or network failed or because the format is not supported.": "La señal en estos momentos no está disponible, por favor, inténtelo nuevamente.",
+                    "No compatible source was found for this media.": "La señal en estos momentos no está disponible, por favor, inténtelo nuevamente."
+                }
+            },
+            language: 'en',
+            textTrackSettings: false,
+            controlBar: {
+                volumePanel: {
+                    inline: false
+                }
+            }
+        });
 
         this.player.on("useractive", () => {
             this.hideMenuBtn = false;
@@ -419,7 +425,13 @@ export default {
 
                     this.fono_soporte = jsonCanal.fono_soporte;
                     this.correo_soporte = jsonCanal.email_soporte;
-                    this.plan_actual = jsonCanal.plan;
+
+                    this.planactual = jsonCanal.plan;
+                    this.planes = jsonCanal.planes.map(item => {
+                        const [nombre, precio] = item.nombre.split(' - ');
+                        item.nombre = nombre; item.precio = precio;
+                        return item;
+                    });
 
                     if (jsonCanal.parentlockcode != this.parentHash) {
                         this.parentHash == jsonCanal.parentlockcode;
@@ -465,7 +477,8 @@ export default {
         return {
             fono_soporte: '+56 9 123456789',
             correo_soporte: 'support@company.net',
-            plan_actual: 'Básico',
+            planactual: 'Básico',
+            planes: [],
             sidebarCanEnabled: process.env.VUE_APP_SIDEBAR_ENABLED === "enable",
             sidebarRightActive: false,
             num: 0,
