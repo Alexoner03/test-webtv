@@ -2,7 +2,7 @@
 node_modules
 /dist
 /icons
-
+package-lock.json
 
 # local env files
 .env.local

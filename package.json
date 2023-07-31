@@ -1,7 +1,7 @@
 {
   "name": "bantel",
   "productName": "Bantel TV",
-  "version": "2.0.24b",
+  "version": "8.1.23",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

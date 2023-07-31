@@ -73,6 +73,7 @@ export default {
                     this.$router.replace({name: "player"});
                 }
                 else{
+                    this.logeando = false;
                     this.showAlert = true;
                     this.alertMsg = result.msg;
                 }
