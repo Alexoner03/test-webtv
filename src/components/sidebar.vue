@@ -1,5 +1,5 @@
 <template>
-  <va-sidebar v-model="show" textColor="dark" minimizedWidth="0" position="right" style="position: absolute" width="350px">
+  <va-sidebar v-model="props.show" textColor="dark" minimizedWidth="0" position="right" style="position: absolute" width="350px">
     <template v-if="page === 'home'">
       <va-sidebar-item>
         <va-sidebar-item-content>

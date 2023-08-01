@@ -51,7 +51,7 @@ export default {
         
         this.queryParams = new URLSearchParams(window.location.search);
 
-        let sover = this.queryParams.get('sover');
+        let sover = this.queryParams.get('sover') ?? '20';
         const firstDotIndex = sover.indexOf(".");
         const secondDotIndex = sover.indexOf(".", firstDotIndex + 1);
         sover = secondDotIndex !== -1 ? sover.slice(0, secondDotIndex) : sover;

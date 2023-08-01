@@ -15,7 +15,7 @@ export default function()
                         currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH*3600;
     }
 
-    const login = async (user, pass, mac) =>
+    const login = async (user, pass, mac = "") =>
     {
         const formData = new FormData();
         const url = process.env.VUE_APP_API_URL+'api/get-web2';
