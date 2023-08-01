@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import Player from '../views/Player.vue'
 import Login from '../views/Login.vue'
 import loginService from '../services/login.service'
@@ -17,7 +17,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 
