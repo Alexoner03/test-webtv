@@ -5,7 +5,7 @@
         </div>
         <div class="flex md6 xs12 align--center justify--center d-flex">
             <div id="loginform">
-                <img :src="require('@/assets/'+logo)" class="d-block mb-5" height="50">
+                <img :src="logo" class="d-block mb-5" height="50">
                 <va-alert id="aviso" dense color="danger" icon="info" v-model="showAlert" closeable>
                     {{ alertMsg }}
                 </va-alert>
@@ -32,7 +32,6 @@
 
 <script> 
 import loginService from '../services/login.service'
-
 export default {
     data(){
         return {
@@ -41,9 +40,9 @@ export default {
             alertMsg: '',
             check: false,
             showAlert: false,
-            logo: process.env.VUE_APP_LOGO,
+            logo: require('@/assets/' + process.env.VUE_APP_LOGO),
             queryParams: null,
-            logeando: false
+            logeando: false,
         }
     },
     created() {
