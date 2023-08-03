@@ -38,4 +38,12 @@ router.beforeEach((to,from,next)=>{
   }
 })
 
+router.afterEach(() => {
+  SpatialNavigation.init();
+  SpatialNavigation.add({
+    selector: "._selectable",
+  });
+  SpatialNavigation.makeFocusable();
+})
+
 export default router

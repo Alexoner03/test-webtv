@@ -3,6 +3,16 @@
 </template>
 
 <style>
+
+._selectable:focus {
+  border: 1px solid white
+}
+
+
+._selectable:active {
+  border: 1px solid white
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
