@@ -9,6 +9,7 @@
       <va-sidebar-item
           v-for="item in items"
           :key="item.title"
+          class="_selectable"
           @click="getAction(item.action)"
       >
         <va-sidebar-item-content>
@@ -20,7 +21,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'profile'">
-      <va-sidebar-item @click="page = 'home'">
+      <va-sidebar-item @click="page = 'home'"           class="_selectable"
+      >
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -98,7 +100,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'other_plans'">
-      <va-sidebar-item @click="page = 'plan'">
+      <va-sidebar-item @click="page = 'plan'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -122,7 +124,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'change_password'">
-      <va-sidebar-item @click="page = 'home'">
+      <va-sidebar-item @click="page = 'home'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -143,7 +145,7 @@
             <div style="margin-left: 1rem;" class="mb-4">
               <va-input
                   v-model="emailAssociated"
-                  class="mb-6"
+                  class="mb-6 _selectable"
                   placeholder="Ej: micorreo@correo.com"
               />
             </div>
@@ -151,6 +153,7 @@
             <div style="margin-left: 1rem;" class="mb-4">
               <va-button
                   size="large"
+                  class="_selectable"
                   style="width: 100px"
                   color="secondary"
                   round
@@ -179,7 +182,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'disable_account'">
-      <va-sidebar-item @click="page = 'home'">
+      <va-sidebar-item @click="page = 'home'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -191,7 +194,7 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item @click="page = 'autodisable'">
+      <va-sidebar-item @click="page = 'autodisable'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default" />
           <va-sidebar-item-title>
@@ -199,7 +202,7 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item @click="page = 'disable_other'">
+      <va-sidebar-item @click="page = 'disable_other'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default" />
           <va-sidebar-item-title>
@@ -209,7 +212,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'autodisable'">
-      <va-sidebar-item @click="page = 'disable_account'">
+      <va-sidebar-item @click="page = 'disable_account'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -234,7 +237,7 @@
                     size="large"
                     color="secondary"
                     style="width: 80px"
-                    class="mr-4"
+                    class="mr-4 _selectable"
                     :loading="desasociando"
                     round
                     @click="getAction('disassociateAccount')"
@@ -248,6 +251,7 @@
                     outline
                     color="white"
                     round
+                    class="_selectable"
                     @click="page = 'disable_account'"
                 >
                   No
@@ -259,7 +263,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'disable_other'">
-      <va-sidebar-item @click="page = 'disable_account'">
+      <va-sidebar-item @click="page = 'disable_account'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -284,7 +288,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'parental_control'">
-      <va-sidebar-item @click="page = 'home'">
+      <va-sidebar-item @click="page = 'home'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -309,7 +313,7 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'logout'">
-      <va-sidebar-item @click="page = 'home'">
+      <va-sidebar-item @click="page = 'home'" class="_selectable">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
         </va-sidebar-item-content>
@@ -331,7 +335,7 @@
                     size="large"
                     color="secondary"
                     style="width: 80px"
-                    class="mr-4"
+                    class="mr-4 _selectable"
                     round
                     @click="getAction('logoutConfirm')"
                 >
@@ -345,6 +349,7 @@
                     color="white"
                     round
                     @click="page = 'home'"
+                    class="_selectable"
                 >
                   No
                 </va-button>
