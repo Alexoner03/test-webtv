@@ -351,6 +351,10 @@
     filter: invert(100%) sepia(0%) saturate(3%) hue-rotate(123deg) brightness(116%) contrast(100%);
 }
 
+.barEPG._selectable:focus, .barChPrev._selectable:focus, .barChNext._selectable:focus{
+    filter: invert(100%) sepia(0%) saturate(3%) hue-rotate(123deg) brightness(116%) contrast(100%);
+}
+
 .vjs-theme-fantasy .vjs-volume-bar {
     margin-top: 1.7em;
 }
@@ -602,4 +606,60 @@
     .vjs-fullscreen-control[title="Fullscreen"]{
         display: inline-block !important;
     }
+}
+
+.controlPanel {
+    position: absolute;
+    bottom: 1rem;
+    width: 100vw;
+    height: 150px;
+    z-index: 1;
+    transition: all ease 1s;
+}
+
+.list-control {
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    background-color: #222327;
+    display: flex;
+    align-items: center;
+}
+
+.list-control > div{
+    margin-right: 1rem;
+}
+
+.control-number {
+    width: 200px;
+    height: 100px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 70px;
+}
+
+.control-epg {
+    display: flex;
+    color: white;
+    width: 100%;
+}
+
+
+.control-epg--now {
+    margin-right: 1rem;
+}
+
+.control-epg--now, .control-epg--after {
+    width: 100%;
+}
+
+.control-channel {
+    color: gray;
+    font-size: 70px;
+}
+
+.control-channel:hover, .control-channel:focus {
+    color: white;
 }

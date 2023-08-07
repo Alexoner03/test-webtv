@@ -1,5 +1,6 @@
 <template>
-  <va-sidebar v-model="props.show" textColor="dark" minimizedWidth="0" position="right" style="position: absolute" width="350px">
+  <va-sidebar v-model="props.show" textColor="dark" minimizedWidth="0" position="right" style="position: absolute"
+              width="350px">
     <template v-if="page === 'home'">
       <va-sidebar-item>
         <va-sidebar-item-content>
@@ -9,11 +10,12 @@
       <va-sidebar-item
           v-for="item in items"
           :key="item.title"
-          class="_selectable"
           @click="getAction(item.action)"
+          :class="[show ? '_selectable': '']"
+          @keydown.enter="getAction(item.action)"
       >
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" :name="item.icon" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" :name="item.icon"/>
           <va-sidebar-item-title>
             {{ item.title }}
           </va-sidebar-item-title>
@@ -21,10 +23,12 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'profile'">
-      <va-sidebar-item @click="page = 'home'"           class="_selectable"
+      <va-sidebar-item @click="page = 'home'"
+                       :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'home'"
       >
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -38,7 +42,7 @@
         <va-sidebar-item-content>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem" class="title">Usuario</p>
-            <p style="margin-left: 1rem">{{profileInfo.name}}</p>
+            <p style="margin-left: 1rem">{{ profileInfo.name }}</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -46,15 +50,16 @@
         <va-sidebar-item-content>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem" class="title">Correo electrónico</p>
-            <p style="margin-left: 1rem">{{profileInfo.email}}</p>
+            <p style="margin-left: 1rem">{{ profileInfo.email }}</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'plan'">
-      <va-sidebar-item @click="page = 'home'">
+      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'home'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -81,9 +86,10 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item> -->
-      <va-sidebar-item @click="page = 'other_plans'">
+      <va-sidebar-item @click="page = 'other_plans'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'other_plans'">
         <va-sidebar-item-content>
-          <va-icon style="margin-left: 1rem" name="dvr" />
+          <va-icon style="margin-left: 1rem" name="dvr"/>
           <va-sidebar-item-title>
             Otros planes
           </va-sidebar-item-title>
@@ -100,9 +106,10 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'other_plans'">
-      <va-sidebar-item @click="page = 'plan'" class="_selectable">
+      <va-sidebar-item @click="page = 'plan'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page= 'plan'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -116,17 +123,18 @@
         <va-sidebar-item-content>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem" class="title">{{ plan.nombre }}</p>
-            <p style="margin-left: 1rem">{{plan.cantidad_canales}} canales</p>
+            <p style="margin-left: 1rem">{{ plan.cantidad_canales }} canales</p>
             <!-- <p style="margin-left: 1rem">{{plan.deviceCount}} dispositivo reproduciendo</p> -->
-            <p style="margin-left: 1rem">{{plan.precio}} x mes</p>
+            <p style="margin-left: 1rem">{{ plan.precio }} x mes</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'change_password'">
-      <va-sidebar-item @click="page = 'home'" class="_selectable">
+      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'home'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -139,13 +147,16 @@
       <va-sidebar-item>
         <va-sidebar-item-content>
           <va-sidebar-item-title>
-            <p style="margin-left: 1rem;white-space: normal; word-break: normal" class="mb-4">Le enviaremos un correo para que pueda cambiar su contraseña</p>
-            <p style="margin-left: 1rem;white-space: normal; word-break: normal" class="mb-4">Favor ingrese el correo electrónico al cual está asociada esta cuenta</p>
+            <p style="margin-left: 1rem;white-space: normal; word-break: normal" class="mb-4">Le enviaremos un correo
+              para que pueda cambiar su contraseña</p>
+            <p style="margin-left: 1rem;white-space: normal; word-break: normal" class="mb-4">Favor ingrese el correo
+              electrónico al cual está asociada esta cuenta</p>
 
             <div style="margin-left: 1rem;" class="mb-4">
               <va-input
                   v-model="emailAssociated"
-                  class="mb-6 _selectable"
+                  class="mb-6"
+                  :class="[show ? '_selectable': '']"
                   placeholder="Ej: micorreo@correo.com"
               />
             </div>
@@ -153,7 +164,8 @@
             <div style="margin-left: 1rem;" class="mb-4">
               <va-button
                   size="large"
-                  class="_selectable"
+                  :class="[show ? '_selectable': '']"
+                  @keydown.enter="getAction('submitChangePassword')"
                   style="width: 100px"
                   color="secondary"
                   round
@@ -166,7 +178,7 @@
             <div v-if="touchChangePassword" style="margin-left: 1rem">
               <va-progress-circle indeterminate v-if="changingPassword"/>
               <div v-else>
-                <div class="d-flex label_cp" style="align-items: center" >
+                <div class="d-flex label_cp" style="align-items: center">
                   <div>
                     <va-icon color="white" name="forward_to_inbox" size="2rem" class="mr-2"></va-icon>
                   </div>
@@ -182,9 +194,12 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'disable_account'">
-      <va-sidebar-item @click="page = 'home'" class="_selectable">
+      <va-sidebar-item @click="page = 'home'"
+                       :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'home'"
+      >
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -194,17 +209,19 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item @click="page = 'autodisable'" class="_selectable">
+      <va-sidebar-item @click="page = 'autodisable'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page ='autodisable'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default" />
+          <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default"/>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem">Autodesvincularse</p>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item @click="page = 'disable_other'" class="_selectable">
+      <va-sidebar-item @click="page = 'disable_other'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'disable_other'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default" />
+          <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default"/>
           <va-sidebar-item-title>
             <p style="margin-left: 1rem; font-size: 1rem">Desvincular otro dispositivo</p>
           </va-sidebar-item-title>
@@ -212,9 +229,10 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'autodisable'">
-      <va-sidebar-item @click="page = 'disable_account'" class="_selectable">
+      <va-sidebar-item @click="page = 'disable_account'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'disable_account'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -227,9 +245,11 @@
       <va-sidebar-item class="mb-4">
         <va-sidebar-item-content>
           <va-sidebar-item-title>
-            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="title mb-4">¿Desea desvincular este dispositivo de la cuenta?</p>
+            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="title mb-4">
+              ¿Desea desvincular este dispositivo de la cuenta?</p>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="mb-4">
-              *Recuerde que si usted se desvincula, liberará un cupo para que otro dispositivo pueda vincularse a la cuenta.
+              *Recuerde que si usted se desvincula, liberará un cupo para que otro dispositivo pueda vincularse a la
+              cuenta.
             </p>
             <div>
               <div style="margin-left: 1rem;" class="mb-4">
@@ -237,7 +257,9 @@
                     size="large"
                     color="secondary"
                     style="width: 80px"
-                    class="mr-4 _selectable"
+                    class="mr-4"
+                    :class="[show ? '_selectable': '']"
+                    @keydown.enter="getAction('disassociateAccount')"
                     :loading="desasociando"
                     round
                     @click="getAction('disassociateAccount')"
@@ -251,7 +273,8 @@
                     outline
                     color="white"
                     round
-                    class="_selectable"
+                    :class="[show ? '_selectable': '']"
+                    @keydown.enter="page = 'disable_account'"
                     @click="page = 'disable_account'"
                 >
                   No
@@ -263,9 +286,10 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'disable_other'">
-      <va-sidebar-item @click="page = 'disable_account'" class="_selectable">
+      <va-sidebar-item @click="page = 'disable_account'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'disable_account'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -278,7 +302,8 @@
       <va-sidebar-item class="mb-4">
         <va-sidebar-item-content>
           <va-sidebar-item-title>
-            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal; text-transform: unset" class="title mb-4">Si desea desvincular otro dispositivo debe solicitarlo al:</p>
+            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal; text-transform: unset"
+               class="title mb-4">Si desea desvincular otro dispositivo debe solicitarlo al:</p>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="mb-4">
               Tel: {{ fono }} <br>
               {{ correo }}
@@ -288,9 +313,10 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'parental_control'">
-      <va-sidebar-item @click="page = 'home'" class="_selectable">
+      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'home'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -303,7 +329,8 @@
       <va-sidebar-item class="mb-4">
         <va-sidebar-item-content>
           <va-sidebar-item-title>
-            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal; text-transform: unset" class="title mb-4">Si desea obtener su código control parental, debe solicitarlo al:</p>
+            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal; text-transform: unset"
+               class="title mb-4">Si desea obtener su código control parental, debe solicitarlo al:</p>
             <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="mb-4">
               Tel: {{ fono }} <br>
               {{ correo }}
@@ -313,9 +340,10 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'logout'">
-      <va-sidebar-item @click="page = 'home'" class="_selectable">
+      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
+                       @keydown.enter="page = 'home'">
         <va-sidebar-item-content>
-          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back" />
+          <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
       </va-sidebar-item>
       <va-sidebar-item class="mb-4">
@@ -328,15 +356,18 @@
       <va-sidebar-item class="mb-4">
         <va-sidebar-item-content>
           <va-sidebar-item-title>
-            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="title mb-4">¿Está seguro que desea cerrar sesión?</p>
+            <p style="margin-left: 1rem; font-size: 1rem; white-space: normal; word-break: normal" class="title mb-4">
+              ¿Está seguro que desea cerrar sesión?</p>
             <div>
               <div style="margin-left: 1rem;" class="mb-4">
                 <va-button
                     size="large"
                     color="secondary"
                     style="width: 80px"
-                    class="mr-4 _selectable"
+                    class="mr-4"
                     round
+                    :class="[show ? '_selectable': '']"
+                    @keydown.enter="getAction('logoutConfirm')"
                     @click="getAction('logoutConfirm')"
                 >
                   Si
@@ -348,8 +379,9 @@
                     outline
                     color="white"
                     round
+                    :class="[show ? '_selectable': '']"
+                    @keydown.enter="page = 'home'"
                     @click="page = 'home'"
-                    class="_selectable"
                 >
                   No
                 </va-button>
@@ -363,119 +395,120 @@
 </template>
 
 <script setup>
-  import useProfileService from "../services/profile.service"
-  import loginService from '../services/login.service'
-  import {reactive, ref} from "vue";
-  import {useRouter} from "vue-router";
+import useProfileService from "../services/profile.service"
+import loginService from '../services/login.service'
+import {reactive, ref} from "vue";
+import {useRouter} from "vue-router";
 
-  const props = defineProps({
-    show: {
-      type: Boolean,
-      default: false,
-    },
-    fono: {
-      type: String,
-      default: "+56 9 123456789",
-    },
-    correo: {
-      type: String,
-      default: "support@company.net",
-    },
-    planes: {
-      type: Array, 
-      default: []
-    },
-    planactual: {
-      type: String,
-      default: 'Básico'
-    }
-  })
-
-  const desasociando = ref(false);
-  const profileService = useProfileService()
-  const router = useRouter()
-  const items = ref([])
-  const page = ref("home")
-  const emailAssociated = ref("")
-  const changingPassword = ref(false)
-  const touchChangePassword = ref(false) //verificando si no ha hecho nada
-  const profileInfo = reactive({
-    name: "",
-    email: ""
-  })
-
-  // const planInfo = reactive({
-  //   associatedPlan: '',
-  //   vigency: {from : "",to: ""},
-  //   other_plans: ''
-  // })
-
-  profileService.getProfileMenu().then((_items) => {
-    items.value = _items
-  })
-
-  profileService.getProfileInfo().then((_info) => {
-    profileInfo.name = localStorage.user
-    profileInfo.email = localStorage.mail
-  })
-
-  // profileService.getPlanInfo().then((_info) => {
-  //   planInfo.associatedPlan = _info.plan
-  //   planInfo.vigency = _info.vigency
-  //   planInfo.other_plans = _info.other_plans
-  // })
-
-  const getAction = (actionName) =>
-  {
-    const pages = [
-      "profile",
-      "plan",
-      //"change_password",
-      "disable_account",
-      "parental_control",
-      "logout",
-    ]
-
-    if(pages.includes(actionName))
-    {
-      page.value = actionName
-      return
-    }
-
-    const actions = {
-      async disassociateAccount(){
-        desasociando.value = true;
-        const reqData = new FormData();
-        reqData.append("token", localStorage.token);
-        const req = await fetch(process.env.VUE_APP_API_URL + 'api/desvincular', { method: 'POST', body: reqData, redirect: 'follow' }); 
-        const res = await req.json();
-
-        if(res.error){
-          alert("Error al desvincular cuenta, inténtelo más tarde");
-          desasociando.value = false;
-        }
-        else{
-          this.logoutConfirm();
-        }
-      },
-      logoutConfirm(){
-        const {isLogged} = loginService();
-        isLogged.value = false;
-        localStorage.clear();
-        router.replace({name: 'login'})
-      },
-      submitChangePassword(){
-        touchChangePassword.value = true
-        changingPassword.value = true
-        profileService.changePassword(emailAssociated.value).then(() => changingPassword.value = false)
-      },
-      soon(){
-        alert("Disponible en breve")
-      }
-    }
-
-    actions[actionName] ? actions[actionName]() : null
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: false,
+  },
+  fono: {
+    type: String,
+    default: "+56 9 123456789",
+  },
+  correo: {
+    type: String,
+    default: "support@company.net",
+  },
+  planes: {
+    type: Array,
+    default: []
+  },
+  planactual: {
+    type: String,
+    default: 'Básico'
   }
+})
+
+const desasociando = ref(false);
+const profileService = useProfileService()
+const router = useRouter()
+const items = ref([])
+const page = ref("home")
+const emailAssociated = ref("")
+const changingPassword = ref(false)
+const touchChangePassword = ref(false) //verificando si no ha hecho nada
+const profileInfo = reactive({
+  name: "",
+  email: ""
+})
+
+// const planInfo = reactive({
+//   associatedPlan: '',
+//   vigency: {from : "",to: ""},
+//   other_plans: ''
+// })
+
+profileService.getProfileMenu().then((_items) => {
+  items.value = _items
+})
+
+profileService.getProfileInfo().then((_info) => {
+  profileInfo.name = localStorage.user
+  profileInfo.email = localStorage.mail
+})
+
+// profileService.getPlanInfo().then((_info) => {
+//   planInfo.associatedPlan = _info.plan
+//   planInfo.vigency = _info.vigency
+//   planInfo.other_plans = _info.other_plans
+// })
+
+const getAction = (actionName) => {
+  const pages = [
+    "profile",
+    "plan",
+    //"change_password",
+    "disable_account",
+    "parental_control",
+    "logout",
+  ]
+
+  if (pages.includes(actionName)) {
+    page.value = actionName
+    return
+  }
+
+  const actions = {
+    async disassociateAccount() {
+      desasociando.value = true;
+      const reqData = new FormData();
+      reqData.append("token", localStorage.token);
+      const req = await fetch(process.env.VUE_APP_API_URL + 'api/desvincular', {
+        method: 'POST',
+        body: reqData,
+        redirect: 'follow'
+      });
+      const res = await req.json();
+
+      if (res.error) {
+        alert("Error al desvincular cuenta, inténtelo más tarde");
+        desasociando.value = false;
+      } else {
+        this.logoutConfirm();
+      }
+    },
+    logoutConfirm() {
+      const {isLogged} = loginService();
+      isLogged.value = false;
+      localStorage.clear();
+      router.replace({name: 'login'})
+    },
+    submitChangePassword() {
+      touchChangePassword.value = true
+      changingPassword.value = true
+      profileService.changePassword(emailAssociated.value).then(() => changingPassword.value = false)
+    },
+    soon() {
+      alert("Disponible en breve")
+    }
+  }
+
+  actions[actionName] ? actions[actionName]() : null
+}
 
 </script>
 

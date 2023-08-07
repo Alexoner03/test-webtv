@@ -2,15 +2,16 @@
   <router-view/>
 </template>
 
+
 <style>
 
 ._selectable:focus {
-  border: 1px solid white
+  border: 3px solid #338ffd;
 }
 
 
 ._selectable:active {
-  border: 1px solid white
+  border: 2px solid #338ffd;
 }
 
 ::-webkit-scrollbar {

@@ -12,7 +12,8 @@
       </va-navbar-item>
     </template>
     <template #right v-if="sidebarCanEnabled">
-      <va-button class="mb-2 _selectable" id="userbg" flat color="#ffffff" @click="sidebarRightActive = !sidebarRightActive"> {{
+      <va-button class="mb-2 _selectable" id="userbg" flat color="#ffffff"
+                 @click="sidebarRightActive = !sidebarRightActive"> {{
           username
         }}
       </va-button>
@@ -30,11 +31,14 @@
   </va-navbar>
   <div id="main">
     <va-sidebar :minimized="minimized" textColor="dark" minimizedWidth="0">
-      <div v-if="canales">
-        <va-sidebar-item id="favourite" @click="this.adultAllowed = false; favHidden = false">
+      <div v-if="canales" style="z-index: 9999999">
+        <va-sidebar-item id="favourite" @click="this.adultAllowed = false; favHidden = !favHidden"
+                         :class="[!minimized ? '_selectable': '']"
+                         @keydown.enter="this.adultAllowed = false; favHidden = !favHidden">
           <va-sidebar-item-content class="px-1 py-2">
-            <va-icon class="material-icons mr-5" :class="{ hidden: favHidden }"
-                     @click.stop.prevent="this.adultAllowed = false; favHidden = true">arrow_back
+            <va-icon class="material-icons mr-5"
+                     :class="[favHidden ? 'hidden':'']"
+            >arrow_back
             </va-icon>
             <va-sidebar-item-title class="px-2" :class="{ 'text-center': favHidden }">
               <va-icon class="material-icons">favorite</va-icon>
@@ -45,17 +49,24 @@
 
         <va-sidebar-item hover-color="#222327" :class="{ hidden: !favHidden }">
           <va-sidebar-item-content class="px-1 py-2">
-            <va-icon class="material-icons" @click="arrow_left">arrow_back</va-icon>
+            <va-icon class="material-icons" :class="[!minimized ? '_selectable': '']"
+                     @click="arrow_left" @keydown.enter="arrow_left">arrow_back
+            </va-icon>
             <va-sidebar-item-title class="px-2 text-center overflow-h">
               <Trunquee :text="currentCat" v-if="currentCat"/>
             </va-sidebar-item-title>
-            <va-icon class="material-icons" @click="arrow_right">arrow_forward</va-icon>
+            <va-icon class="material-icons" :class="[!minimized ? '_selectable': '']"
+                     @click="arrow_right" @keydown.enter="arrow_right">
+              arrow_forward
+            </va-icon>
           </va-sidebar-item-content>
         </va-sidebar-item>
 
         <div class="px-2 mt-2" :class="{ hidden: favHidden }">
           <va-sidebar-item class="channel mb-1 overflow-h" v-for="channel in favoritos" :key="channel.cn_id"
-                           :class="{ watching: channel.cn_id == playChId }" @click.prevent="clickFavourite(channel);">
+                           :class="{ watching: channel.cn_id == playChId, _selectable: !minimized && !favHidden }"
+                           @click.prevent="clickFavourite(channel);"
+                           @keydown.enter.prevent="clickFavourite(channel)">
             <div class="row">
               <div class="flex xs3">
                 <div class="chnum px-1 py-2 overflow-h text-center">
@@ -70,7 +81,9 @@
                   <Trunquee :text="channel.nombre"/>
                 </div>
               </div>
-              <div class="flex xs1 pt-1" @click.stop.prevent="trashFavo($event, channel.cn_id)">
+              <div class="flex xs1 pt-1" :class="[!minimized ? '_selectable': '']"
+                   @keydown.enter.stop.prevent="trashFavo($event, channel.cn_id)"
+                   @click.stop.prevent="trashFavo($event, channel.cn_id)">
                 <span class="material-icons">delete_outline</span>
               </div>
             </div>
@@ -82,8 +95,11 @@
             {{ section.nombre }}
           </va-sidebar-item>
           <va-sidebar-item class="channel mb-1 overflow-h" v-for="channel in section.canales"
-                           :class="{ watching: channel.cn_id == playChId }" :key="channel.cn_id"
-                           @click.prevent="currentSec = section; clickChannel(channel);">
+                           :class="{ watching: channel.cn_id == playChId, _selectable: !minimized }"
+                           :key="channel.cn_id"
+                           @click.prevent="currentSec = section; clickChannel(channel);"
+                           @keydown.enter.prevent="currentSec = section; clickChannel(channel)"
+          >
             <div class="chnum px-1 py-2 overflow-h text-center">
               {{ channel.numero }}
             </div>
@@ -107,24 +123,53 @@
                :planactual="planactual"></sidebar>
     </template>
 
-    <va-button outline id="delerfav" class="favbtn" :rounded="false" text-color="#ffffff" style="border-color: #ffffff;"
-               :class="[hideDelFavBtn ? 'fade' : '', delFavClick ? 'done' : '']" @click="delFromFavs">
+    <va-button outline id="delerfav" class="favbtn" :rounded="false" text-color="#ffffff"
+               style="border-color: #ffffff;"
+               :class="[hideDelFavBtn ? 'fade' : '_selectable', delFavClick ? 'done' : '']" @click="delFromFavs">
       <span class="material-icons">close</span> Eliminar de Favoritos
     </va-button>
 
-    <va-button outline id="addtofav" class="favbtn" :rounded="false" text-color="#ffffff" style="border-color: #ffffff;"
-               :class="[hideFavBtn ? 'fade' : '', addFavClick ? 'done' : '']" @click="addtoFavs">
+    <va-button outline id="addtofav" class="favbtn" :rounded="false" text-color="#ffffff"
+               style="border-color: #ffffff;"
+               :class="[hideFavBtn ? 'fade' : '_selectable', addFavClick ? 'done' : '']" @click="addtoFavs">
       <va-icon class="material-icons">favorite_border</va-icon>
       Añadir a Favoritos
     </va-button>
+
+    <article class="controlPanel" v-show="!hideControls">
+      <div class="list-control">
+        <div class="control-number">{{ currentCh.numero }}</div>
+        <div class="control-image">
+          <img :src="currentCh.imagen" alt="" height="100">
+        </div>
+        <div class="control-epg">
+          <div ref="control_epg_now" class="control-epg--now">
+          </div>
+          <div ref="control_epg_after" class="control-epg--after">
+          </div>
+        </div>
+        <div class="control-channel __prev _selectable" @keydown.enter="controlHandler('prev')">
+          <va-icon :size="44" class="material-icons">arrow_back</va-icon>
+        </div>
+        <div class="control-channel __next _selectable" @keydown.enter="controlHandler('next')">
+          <va-icon :size="44" class="material-icons">arrow_forward</va-icon>
+        </div>
+        <div class="control-channel __next _selectable" @keydown.enter="controlHandler('fullscreen')">
+          <va-icon :size="50" class="material-icons">fullscreen</va-icon>
+        </div>
+        <div class="control-channel __next _selectable" @keydown.enter="controlHandler('info')">
+          <va-icon :size="44" class="material-icons">info</va-icon>
+        </div>
+
+      </div>
+    </article>
 
     <div v-show="favMsgShow">
       {{ addFavClick ? 'Se agregó a favoritos' : 'El favorito fue eliminado' }}
     </div>
 
     <div @click="minimized = true">
-      <video ref="liveplayer" class="video-js vjs-theme-fantasy" playsinline autoplay controls preload="auto">
-      </video>
+      <video ref="liveplayer" class="video-js vjs-theme-fantasy" playsinline autoplay controls preload="auto"></video>
     </div>
 
     <va-modal v-model="showEpgModal" fullscreen hide-default-actions>
@@ -142,11 +187,12 @@
           <p>debes ingresar tu código parental</p>
           <form method="POST" action="#" @submit.prevent="parentalCheck" autocomplete="off">
             <div class="py-3">
-              <input type="text" name="parentcode" ref="parentcode" placeholder="Ej: XXXXXXXX" required>
+              <input type="text" name="parentcode" ref="parentcode" placeholder="Ej: XXXXXXXX" required
+                     class="_selectable">
               <p v-show="badParental" class="pl-1 pt-2">¡El código ingresado no es correcto!</p>
             </div>
             <div>
-              <va-button type="submit" size="medium" class="py-2">Ver canales</va-button>
+              <va-button type="submit" size="medium" class="py-2 _selectable">Ver canales</va-button>
             </div>
           </form>
         </div>
@@ -193,6 +239,7 @@ import loginService from '../services/login.service';
 import CryptoJS from 'crypto-js';
 import videojs from 'video.js';
 import bcrypt from 'bcryptjs';
+import {useRoute} from "vue-router";
 
 export default {
   components: {
@@ -254,6 +301,7 @@ export default {
   mounted() {
     this.player = videojs(this.$refs.liveplayer,
         {
+          inactivityTimeout: 5000,
           html5: {
             nativeTextTracks: false,
             vhs: {
@@ -269,21 +317,26 @@ export default {
           },
           language: 'en',
           textTrackSettings: false,
-          controlBar: {
-            volumePanel: {
-              inline: false
-            }
-          }
+          controlBar: false
         });
 
-    this.player.on("useractive", () => {
+    this.player.on("error", () => {
+      this.hideFavBtn = true;
+      this.hideDelFavBtn = true;
+    });
+
+    this.loadSelectables()
+
+    const userActive = () => {
+      clearTimeout(this.time_out)
+      this.hideControls = false
       this.hideMenuBtn = false;
       this.custom_fav_btn(this.currentCh);
 
       const ch = this.currentCh;
       const ahora = Math.round(+new Date() / 1000);
 
-      if (ch.epg.length == 0) {
+      if (ch.epg.length === 0) {
         this.drawProgress("noepg");
       } else {
         const currentEnd = ch.epg[0].fecha_fin;
@@ -294,116 +347,24 @@ export default {
           this.drawProgress("default");
         }
       }
-    });
+    }
 
-    this.player.on("userinactive", async () => {
+    const userInactive = () => {
+      this.hideControls = true
       this.hideFavBtn = true;
       this.hideDelFavBtn = true;
       this.hideMenuBtn = this.minimized && (document.fullscreenElement || document.webkitFullscreenElement);
 
-      if (this.addFavClick) setTimeout(_ => this.addFavClick = false, 1111);
-      if (this.delFavClick) setTimeout(_ => this.delFavClick = false, 1111);
-    });
+      // if (this.addFavClick) setTimeout(_ => this.addFavClick = false, 5000);
+      // if (this.delFavClick) setTimeout(_ => this.delFavClick = false, 5000);
+    }
 
-    this.player.on("error", () => {
-      this.hideFavBtn = true;
-      this.hideDelFavBtn = true;
-    });
+    document.addEventListener('keydown', () => {
+      userActive()
+      this.time_out = setTimeout(userInactive, 5000)
+    })
 
-    //Número del canal
-    const controlChNum = this.player.controlBar.addChild("button");
-    controlChNum.addClass("barNum");
-    this.chNumtext = controlChNum.el();
-
-    //Logo del canal
-    const controlChImg = this.player.controlBar.addChild("button");
-    controlChImg.addClass("barImg");
-    this.chImgSrc = controlChImg.el();
-
-    //Ahora
-    const controlNow = this.player.controlBar.addChild("button");
-    controlNow.addClass("barNow");
-    this.chNowBlock = controlNow.el();
-
-    //Después
-    const controlNext = this.player.controlBar.addChild("button");
-    controlNext.addClass("barNext");
-    this.chNextBlock = controlNext.el();
-
-    //Anterior Canal
-    let chPrev = videojs.getComponent('Button');
-    let chPrevButton = videojs.extend(chPrev, {
-      constructor: function () {
-        chPrev.apply(this, arguments);
-        this.addClass('barChPrev');
-      },
-      handleClick: () => setTimeout(_ => this.playChannel(this.prevCh, this.playingFavs, true), this.minimized ? 1 : 999)
-    });
-
-    videojs.registerComponent('chPrevButton', chPrevButton);
-    this.player.getChild('controlBar').addChild('chPrevButton', {});
-
-    //Siguiente Canal
-    let chNext = videojs.getComponent('Button');
-    let chNextButton = videojs.extend(chNext, {
-      constructor: function () {
-        chNext.apply(this, arguments);
-        this.addClass('barChNext');
-      },
-      handleClick: () => setTimeout(_ => this.playChannel(this.nextCh, this.playingFavs, true), this.minimized ? 1 : 999)
-    });
-
-    videojs.registerComponent('chNextButton', chNextButton);
-    this.player.getChild('controlBar').addChild('chNextButton', {});
-
-    //Pantalla Completa
-    let otroFull = videojs.getComponent('Button');
-    let otroFullbtn = videojs.extend(otroFull, {
-      constructor: function () {
-        otroFull.apply(this, arguments);
-        this.addClass('vjs-fullscreen-control');
-      },
-      handleClick: () => {
-        if (document.fullscreenElement || document.webkitFullscreenElement) {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-          }
-        } else {
-          const mein = document.querySelector("#main");
-
-          if (mein.requestFullscreen) {
-            mein.requestFullscreen();
-            screen.orientation.lock("landscape-primary").then(_ => {
-            }, _ => {
-            });
-          } else if (mein.webkitRequestFullScreen) {
-            mein.webkitRequestFullScreen();
-          }
-        }
-      }
-    });
-
-    videojs.registerComponent('otroFullbtn', otroFullbtn);
-    this.player.getChild('controlBar').addChild('otroFullbtn', {});
-
-    //Botón EPG
-    let infoEPG = videojs.getComponent('Button');
-    let infoEPGbtn = videojs.extend(infoEPG, {
-      constructor: function () {
-        infoEPG.apply(this, arguments);
-        this.addClass('barEPG');
-      },
-      handleClick: () => this.showEpgModal = true
-    });
-
-    videojs.registerComponent('infoEPGbtn', infoEPGbtn);
-    this.player.getChild('controlBar').addChild('infoEPGbtn', {});
-
-    this.epgBtnBugFix();
-
-    this.loadSelectables()
+    setTimeout(userInactive, 5000)
   },
 
   updated() {
@@ -495,7 +456,7 @@ export default {
       if (visible) setTimeout(_ => {
         this.favMsgShow = false;
         this.player.userActive(false);
-      }, 2000);
+      }, 5000);
     }
   },
 
@@ -510,6 +471,9 @@ export default {
 
   data() {
     return {
+      hideControls: false,
+      time_out: null,
+      progress: null,
       fono_soporte: '+56 9 123456789',
       correo_soporte: 'support@company.net',
       planactual: 'Básico',
@@ -560,6 +524,40 @@ export default {
   },
 
   methods: {
+
+    controlHandler(type) {
+      switch (type) {
+        case "prev":
+          setTimeout(_ => this.playChannel(this.prevCh, this.playingFavs, true), this.minimized ? 1 : 999)
+          break;
+        case "next":
+          setTimeout(_ => this.playChannel(this.nextCh, this.playingFavs, true), this.minimized ? 1 : 999)
+          break;
+        case "fullscreen":
+          if (document.fullscreenElement || document.webkitFullscreenElement) {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            }
+          } else {
+            const mein = document.querySelector("#main");
+
+            if (mein.requestFullscreen) {
+              mein.requestFullscreen();
+              screen.orientation.lock("landscape-primary").then(_ => {
+              }, _ => {
+              });
+            } else if (mein.webkitRequestFullScreen) {
+              mein.webkitRequestFullScreen();
+            }
+          }
+          break;
+        case "info":
+          this.showEpgModal = true;
+          break;
+      }
+    },
 
     minimizedToggle() {
       this.minimized = !this.minimized
@@ -664,9 +662,9 @@ export default {
       const grayBar = '<div class="graybar"></div>';
       const textNext = '<h5 class="text-gray">PRÓXIMO</h5>';
 
-      if (mode == 'noepg') {
-        this.chNowBlock.innerHTML = textNow + '<p class="pb-1">Programación de ' + ch.nombre.replace(/^./, str => str.toUpperCase()) + '</p><div class="whitebar"></div>';
-        this.chNextBlock.innerHTML = textNext + '<p class="text-gray pb-1">Programación de ' + ch.nombre.replace(/^./, str => str.toUpperCase()) + '</p>' + grayBar;
+      if (mode === 'noepg') {
+        this.$refs.control_epg_now.innerHTML = textNow + '<p class="pb-1">Programación de ' + ch.nombre.replace(/^./, str => str.toUpperCase()) + '</p><div class="whitebar"></div>';
+        this.$refs.control_epg_after.innerHTML = textNext + '<p class="text-gray pb-1">Programación de ' + ch.nombre.replace(/^./, str => str.toUpperCase()) + '</p>' + grayBar;
       } else {
         const im = modArray.indexOf(mode);
         const ahora = Math.round(+new Date() / 1000);
@@ -683,8 +681,8 @@ export default {
 
         const perc = 100 - ((currentEnd - ahora) * 100 / (currentEnd - currentIni));
 
-        this.chNowBlock.innerHTML = textNow + '<p class="pb-1">' + ch.epg[im].titulo + '</p>' + currBar(perc) + hourLim(horaIni, horaMid);
-        this.chNextBlock.innerHTML = textNext + '<p class="text-gray pb-1">' + (ch.epg?.[im + 1]?.titulo ?? ('Programación de ' + ch.nombre.replace(/^./, str => str.toUpperCase()))) + '</p>' + grayBar + hourLim(horaMid, horaFin);
+        this.$refs.control_epg_now.innerHTML = textNow + '<p class="pb-1">' + ch.epg[im].titulo + '</p>' + currBar(perc) + hourLim(horaIni, horaMid);
+        this.$refs.control_epg_after.innerHTML = textNext + '<p class="text-gray pb-1">' + (ch.epg?.[im + 1]?.titulo ?? ('Programación de ' + ch.nombre.replace(/^./, str => str.toUpperCase()))) + '</p>' + grayBar + hourLim(horaMid, horaFin);
       }
     },
 
@@ -763,13 +761,13 @@ export default {
           src: churl
         });
 
-        this.chNumtext.innerHTML = ch.numero;
-        this.chImgSrc.innerHTML = '<img src="' + ch.imagen + '" height="70">';
+        // this.chNumtext.innerHTML = ch.numero;
+        // this.chImgSrc.innerHTML = '<img src="' + ch.imagen + '" height="70">';
 
         this.drawProgress(ch.epg.length > 0 ? "default" : "noepg");
         this.player.play();
 
-        if (showFavBtn) setTimeout(_ => this.custom_fav_btn(ch), 60);
+        if (showFavBtn) setTimeout(_ => this.custom_fav_btn(ch), 5000);
       } else {
         this.player.src({
           type: 'application/x-mpegURL',
@@ -810,7 +808,7 @@ export default {
         this.favoritos.push(this.currentCh);
       }
 
-      setTimeout(_ => this.player.userActive(false), 2000);
+      setTimeout(_ => this.player.userActive(false), 5000);
     },
 
     async delFromFavs() {
@@ -829,7 +827,7 @@ export default {
         this.favoritos = this.favoritos.filter(item => item.cn_id != this.currentCh.cn_id);
       }
 
-      setTimeout(_ => this.player.userActive(false), 2000);
+      setTimeout(_ => this.player.userActive(false), 5000);
     },
 
     async fetchDelFav(chid) {
