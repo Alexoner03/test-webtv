@@ -1,5 +1,5 @@
 <template>
-  <va-sidebar v-model="props.show" textColor="dark" minimizedWidth="0" position="right" style="position: absolute"
+  <va-sidebar v-model="props.show" textColor="dark" minimizedWidth="0" position="right" style="position: absolute; z-index: 1 !important;"
               width="350px">
     <template v-if="page === 'home'">
       <va-sidebar-item>
@@ -12,6 +12,7 @@
           :key="item.title"
           @click="getAction(item.action)"
           :class="[show ? '_selectable': '']"
+          :id="item.action + '_item'"
           @keydown.enter="getAction(item.action)"
       >
         <va-sidebar-item-content>
@@ -23,9 +24,9 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'profile'">
-      <va-sidebar-item @click="page = 'home'"
+      <va-sidebar-item  ref="profile_back" @click="backToHome"
                        :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'home'"
+                       @keydown.enter="backToHome"
       >
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
@@ -56,8 +57,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'plan'">
-      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'home'">
+      <va-sidebar-item ref="plan_back" @click="backToHome" :class="[show ? '_selectable': '']"
+                       @keydown.enter="backToHome">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -86,8 +87,8 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item> -->
-      <va-sidebar-item @click="page = 'other_plans'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'other_plans'">
+      <va-sidebar-item @click="nextTo('other_plans')" :class="[show ? '_selectable': '']"
+                       @keydown.enter="nextTo('other_plans')">
         <va-sidebar-item-content>
           <va-icon style="margin-left: 1rem" name="dvr"/>
           <va-sidebar-item-title>
@@ -106,8 +107,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'other_plans'">
-      <va-sidebar-item @click="page = 'plan'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page= 'plan'">
+      <va-sidebar-item ref="other_plans_back" @click="nextTo('plan')" :class="[show ? '_selectable': '']"
+                       @keydown.enter="nextTo('plan')">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -131,8 +132,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'change_password'">
-      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'home'">
+      <va-sidebar-item ref="change_password_back" @click="backToHome" :class="[show ? '_selectable': '']"
+                       @keydown.enter="backToHome">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -194,9 +195,9 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'disable_account'">
-      <va-sidebar-item @click="page = 'home'"
+      <va-sidebar-item ref="disable_account_back" @click="backToHome"
                        :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'home'"
+                       @keydown.enter="backToHome"
       >
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
@@ -209,8 +210,8 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item @click="page = 'autodisable'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page ='autodisable'">
+      <va-sidebar-item @click="nextTo('autodisable')" :class="[show ? '_selectable': '']"
+                       @keydown.enter="nextTo('autodisable')">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default"/>
           <va-sidebar-item-title>
@@ -218,8 +219,8 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item @click="page = 'disable_other'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'disable_other'">
+      <va-sidebar-item @click="nextTo('disable_other')" :class="[show ? '_selectable': '']"
+                       @keydown.enter="nextTo('disable_other')">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 1rem; margin-left: 1rem" name="disabled_by_default"/>
           <va-sidebar-item-title>
@@ -229,8 +230,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'autodisable'">
-      <va-sidebar-item @click="page = 'disable_account'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'disable_account'">
+      <va-sidebar-item ref="autodisable_back" @click="nextTo('disable_account')" :class="[show ? '_selectable': '']"
+                       @keydown.enter="nextTo('disable_account')">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -274,8 +275,8 @@
                     color="white"
                     round
                     :class="[show ? '_selectable': '']"
-                    @keydown.enter="page = 'disable_account'"
-                    @click="page = 'disable_account'"
+                    @keydown.enter="nextTo('disable_account')"
+                    @click="nextTo('disable_account')"
                 >
                   No
                 </va-button>
@@ -286,8 +287,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'disable_other'">
-      <va-sidebar-item @click="page = 'disable_account'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'disable_account'">
+      <va-sidebar-item ref="disable_other_back" @click="nextTo('disable_account')" :class="[show ? '_selectable': '']"
+                       @keydown.enter="nextTo('disable_account')">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -313,8 +314,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'parental_control'">
-      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'home'">
+      <va-sidebar-item ref="parental_control_back" @click="backToHome" :class="[show ? '_selectable': '']"
+                       @keydown.enter="backToHome">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -340,8 +341,8 @@
       </va-sidebar-item>
     </template>
     <template v-else-if="page === 'logout'">
-      <va-sidebar-item @click="page = 'home'" :class="[show ? '_selectable': '']"
-                       @keydown.enter="page = 'home'">
+      <va-sidebar-item ref="logout_back" @click="backToHome" :class="[show ? '_selectable': '']"
+                       @keydown.enter="backToHome">
         <va-sidebar-item-content>
           <va-icon style="margin-right: 2rem; margin-left: 1rem" name="arrow_back"/>
         </va-sidebar-item-content>
@@ -380,8 +381,8 @@
                     color="white"
                     round
                     :class="[show ? '_selectable': '']"
-                    @keydown.enter="page = 'home'"
-                    @click="page = 'home'"
+                    @keydown.enter="backToHome"
+                    @click="backToHome"
                 >
                   No
                 </va-button>
@@ -397,7 +398,7 @@
 <script setup>
 import useProfileService from "../services/profile.service"
 import loginService from '../services/login.service'
-import {reactive, ref} from "vue";
+import {nextTick, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 
 const props = defineProps({
@@ -436,11 +437,25 @@ const profileInfo = reactive({
   email: ""
 })
 
-// const planInfo = reactive({
-//   associatedPlan: '',
-//   vigency: {from : "",to: ""},
-//   other_plans: ''
-// })
+/**
+ * template refs
+ */
+
+const profile_back = ref(null)
+const plan_back = ref(null)
+const other_plans_back = ref(null)
+const change_password_back = ref(null)
+const disable_account_back = ref(null)
+const autodisable_back = ref(null)
+const disable_other_back = ref(null)
+const parental_control_back = ref(null)
+const logout_back = ref(null)
+const profile = ref(null)
+
+/**
+ * end template refs
+ */
+
 
 profileService.getProfileMenu().then((_items) => {
   items.value = _items
@@ -451,13 +466,29 @@ profileService.getProfileInfo().then((_info) => {
   profileInfo.email = localStorage.mail
 })
 
-// profileService.getPlanInfo().then((_info) => {
-//   planInfo.associatedPlan = _info.plan
-//   planInfo.vigency = _info.vigency
-//   planInfo.other_plans = _info.other_plans
-// })
+const backToHome = () => {
+  page.value = 'home'
+  nextTick(() => {
+    document.querySelector("#profile_item")?.focus()
+  })
+}
 
-const getAction = (actionName) => {
+const nextTo = (_page) => {
+  page.value = _page
+  nextTick(() => {
+     switch (_page) {
+       case 'profile': profile_back.value.$el.focus(); break;
+       case 'plan': plan_back.value.$el.focus(); break;
+       case 'other_plans': other_plans_back.value.$el.focus(); break;
+       case 'change_password': change_password_back.value.$el.focus(); break;
+       case 'disable_account': disable_account_back.value.$el.focus(); break;
+       case 'autodisable': autodisable_back.value.$el.focus(); break;
+       case 'disable_other': disable_other_back.value.$el.focus(); break;
+     }
+  })
+}
+
+const getAction = (actionName, params = null) => {
   const pages = [
     "profile",
     "plan",
@@ -469,6 +500,17 @@ const getAction = (actionName) => {
 
   if (pages.includes(actionName)) {
     page.value = actionName
+
+    nextTick(() => {
+      switch (actionName){
+        case 'profile': profile_back.value.$el.focus(); break;
+        case 'plan': plan_back.value.$el.focus(); break;
+        case 'disable_account': disable_account_back.value.$el.focus(); break;
+        case 'parental_control': parental_control_back.value.$el.focus(); break;
+        case 'logout': logout_back.value.$el.focus(); break;
+      }
+    })
+
     return
   }
 
@@ -504,10 +546,13 @@ const getAction = (actionName) => {
     },
     soon() {
       alert("Disponible en breve")
+    },
+    back(params) {
+
     }
   }
 
-  actions[actionName] ? actions[actionName]() : null
+  actions[actionName] ? actions[actionName](params) : null
 }
 
 </script>

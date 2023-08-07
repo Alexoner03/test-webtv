@@ -25,8 +25,8 @@
 #addtofav.favbtn{
     position: absolute;
     top: 10px;
+    right: 45vw;
     z-index: 5;
-    right: 20px;
     visibility: visible;
     opacity: 1;
     transition: visibility 1s,opacity 1s;

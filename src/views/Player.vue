@@ -160,7 +160,6 @@
         <div class="control-channel __next _selectable" @keydown.enter="controlHandler('info')">
           <va-icon :size="44" class="material-icons">info</va-icon>
         </div>
-
       </div>
     </article>
 
@@ -174,7 +173,7 @@
 
     <va-modal v-model="showEpgModal" fullscreen hide-default-actions>
       <slot>
-        <Epg :currChId="currentCh?.cn_id ?? 1958" @clickEpg="playFromEpg"/>
+        <Epg :currChId="currentCh?.cn_id ?? 1958" @clickEpg="playFromEpg" ref="epgModal"/>
       </slot>
     </va-modal>
 
@@ -350,6 +349,7 @@ export default {
     }
 
     const userInactive = () => {
+
       this.hideControls = true
       this.hideFavBtn = true;
       this.hideDelFavBtn = true;
@@ -359,7 +359,22 @@ export default {
       // if (this.delFavClick) setTimeout(_ => this.delFavClick = false, 5000);
     }
 
-    document.addEventListener('keydown', () => {
+    document.addEventListener('keydown', (e) => {
+
+      if(this.showEpgModal) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        switch (e.key){
+          case "ArrowDown" :  this.$refs.epgModal.scrollHandler("vertical",30); break;
+          case "ArrowUp" :    this.$refs.epgModal.scrollHandler("vertical",-30); break;
+          case "ArrowLeft" :  this.$refs.epgModal.scrollHandler("horizontal",-30); break;
+          case "ArrowRight" : this.$refs.epgModal.scrollHandler("horizontal",30); break;
+        }
+
+        return
+      }
+
       userActive()
       this.time_out = setTimeout(userInactive, 5000)
     })

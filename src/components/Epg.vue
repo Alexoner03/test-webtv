@@ -96,6 +96,9 @@ export default {
         }
     },
     emits: ["clickEpg"],
+    expose: [
+      'scrollHandler'
+    ],
     setup(props) {
         const channels = ref(null);
         const times = [
@@ -299,6 +302,25 @@ export default {
             clearInterval(interval);
         });
 
+        const scrollHandler = (type, value) =>{
+          if(type === "horizontal"){
+
+            const cant = refTimelineHeader.value.scrollLeft + value
+
+            refTimeLine.value.scroll({
+              left: cant,
+            });
+
+            return
+          }
+
+          const cant = refChannelList.value.scrollTop + value
+
+          refChannelList.value.scroll({
+            top: cant,
+          });
+        }
+
         return {
             channels,
             times,
@@ -316,7 +338,8 @@ export default {
             filterPrograms,
             getOffSet,
             goTonow,
-            infoCh
+            infoCh,
+            scrollHandler
         };
     },
 };
