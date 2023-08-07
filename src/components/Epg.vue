@@ -86,7 +86,7 @@
 import '../assets/css/epg.scss';
 
 import moment from "moment";
-import { onDeactivated, onMounted, ref } from "vue";
+import {onDeactivated, onMounted, ref} from "vue";
 
 export default {
     props: {
@@ -228,25 +228,16 @@ export default {
         };
 
         const syncScrollY = () => {
-            refChannelList.value.scroll({
-                top: refTimeLine.value.scrollTop,
-            });
-
-            refTimelineHeader.value.scroll({
-                left: refTimeLine.value.scrollLeft,
-            });
+          refChannelList.value.scrollTop = refTimeLine.value.scrollTop
+          refTimelineHeader.value.scrollLeft = refTimeLine.value.scrollLeft
         };
 
         const syncScrollHeader = () => {
-            refTimeLine.value.scroll({
-                left: refTimelineHeader.value.scrollLeft,
-            });
+          refTimeLine.value.scrollLeft = refTimelineHeader.value.scrollLeft
         };
 
         const syncScrollChannelList = () => {
-            refTimeLine.value.scroll({
-                top: refChannelList.value.scrollTop,
-            });
+          refTimeLine.value.scrollTop = refChannelList.value.scrollTop
         };
 
         const getInitDate = (date) => moment.unix(date).format("HH:mm");
@@ -304,21 +295,11 @@ export default {
 
         const scrollHandler = (type, value) =>{
           if(type === "horizontal"){
-
-            const cant = refTimelineHeader.value.scrollLeft + value
-
-            refTimeLine.value.scroll({
-              left: cant,
-            });
-
+            refTimeLine.value.scrollLeft =  refTimelineHeader.value.scrollLeft + value;
             return
           }
 
-          const cant = refChannelList.value.scrollTop + value
-
-          refChannelList.value.scroll({
-            top: cant,
-          });
+          refChannelList.value.scrollTop = refChannelList.value.scrollTop + value
         }
 
         return {

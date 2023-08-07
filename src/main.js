@@ -9,3 +9,4 @@ document.documentElement.style.setProperty('--webtv-accent-epg', '#'+process.env
 document.documentElement.style.setProperty('--webtv-filter-icon', process.env.VUE_APP_FILTER_ICON)
 
 createApp(App).use(router).use(createVuestic()).mount('#app')
+
