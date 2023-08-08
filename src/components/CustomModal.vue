@@ -1,5 +1,11 @@
 <script setup>
+import {onMounted, ref} from "vue";
 
+  const closer = ref(null)
+
+  onMounted(() => {
+    closer.value.focus()
+  })
 </script>
 
 <template>
@@ -11,8 +17,8 @@
           <slot name="body">
             default body
           </slot>
+          <va-button ref="closer" style="color: white; font-size: 24px; font-weight: 900; background: transparent" @keydown.enter="$emit('close')">Presione ENTRAR para cerrar la programación</va-button>
         </div>
-
       </div>
     </div>
   </div>

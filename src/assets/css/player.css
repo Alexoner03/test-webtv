@@ -202,6 +202,28 @@
     width: 100%;
 }
 
+.icon_button {
+    background-color: transparent;
+    border: none;
+    filter: invert(1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+}
+
+.icon_button > img {
+    width: 30px;
+}
+
+.__prev>img, .__next>img {
+    filter: invert(.5);
+}
+
+.__prev:focus > img, .__next:focus> img {
+    filter: invert(1);
+}
+
 .chname *{
     cursor: pointer !important;
 }

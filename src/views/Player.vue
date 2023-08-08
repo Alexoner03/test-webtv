@@ -32,7 +32,7 @@
       </template>
     </va-navbar>
     <div id="main">
-      <va-sidebar :minimized="minimized" textColor="dark" minimizedWidth="0">
+      <va-sidebar :minimized="minimized" textColor="dark" minimizedWidth="0" @close="minimized = !minimized">
         <div v-if="canales" style="z-index: 9999999">
           <va-sidebar-item id="favourite" @click="this.adultAllowed = false; favHidden = !favHidden"
                            :class="[!minimized ? '_selectable': '']"
@@ -51,16 +51,16 @@
 
           <va-sidebar-item hover-color="#222327" :class="{ hidden: !favHidden }">
             <va-sidebar-item-content class="px-1 py-2">
-              <va-icon class="material-icons" :class="[!minimized ? '_selectable': '']"
-                       @click="arrow_left" @keydown.enter="arrow_left">arrow_back
-              </va-icon>
+              <button class="icon_button" :class="[!minimized ? '_selectable': '']"  @click="arrow_left" @keydown.enter="arrow_left">
+                <img :src="require('@/assets/arrow_back.png')" alt="">
+              </button>
               <va-sidebar-item-title class="px-2 text-center overflow-h">
                 <Trunquee :text="currentCat" v-if="currentCat"/>
               </va-sidebar-item-title>
-              <va-icon class="material-icons" :class="[!minimized ? '_selectable': '']"
-                       @click="arrow_right" @keydown.enter="arrow_right">
-                arrow_forward
-              </va-icon>
+
+              <button class="icon_button" :class="[!minimized ? '_selectable': '']"  @click="arrow_right" @keydown.enter="arrow_right">
+                <img :src="require('@/assets/arrow_next.png')" alt="">
+              </button>
             </va-sidebar-item-content>
           </va-sidebar-item>
 
@@ -151,10 +151,10 @@
             </div>
           </div>
           <div class="control-channel __prev _selectable" @keydown.enter="controlHandler('prev')">
-            <va-icon :size="44" class="material-icons">arrow_back</va-icon>
+            <img style="width: 35px" :src="require('@/assets/arrow_back.png')" alt="">
           </div>
           <div class="control-channel __next _selectable" @keydown.enter="controlHandler('next')">
-            <va-icon :size="44" class="material-icons">arrow_forward</va-icon>
+            <img style="width: 35px" :src="require('@/assets/arrow_next.png')" alt="">
           </div>
           <div class="control-channel __next _selectable" @keydown.enter="controlHandler('fullscreen')">
             <va-icon :size="50" class="material-icons">fullscreen</va-icon>
@@ -355,14 +355,16 @@ export default {
       this.hideFavBtn = true;
       this.hideDelFavBtn = true;
       this.minimized = true
+      this.sidebarRightActive = false
       this.hideMenuBtn = this.minimized && (document.fullscreenElement || document.webkitFullscreenElement);
 
       if (this.addFavClick) setTimeout(_ => this.addFavClick = false, 10000);
       if (this.delFavClick) setTimeout(_ => this.delFavClick = false, 10000);
     }
 
-    document.addEventListener('keydown', (e) => {
-      if(this.showEpgModal) {
+    window.addEventListener('keydown', (e) => {
+
+      if(this.showEpgModal && e.key !== "Enter") {
         e.preventDefault()
         e.stopPropagation()
 
@@ -372,7 +374,6 @@ export default {
           case "ArrowLeft" :  this.$refs.epgModal.scrollHandler("horizontal", -30 ); break;
           case "ArrowRight" : this.$refs.epgModal.scrollHandler("horizontal", 30  ); break;
         }
-
         return
       }
 
