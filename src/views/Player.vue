@@ -6,7 +6,7 @@
         <va-navbar-item class="py-3">
           <img :src="require('@/assets/' + logo)" alt="oneplay logo" class="mt-1" height="35">
         </va-navbar-item>
-        <va-navbar-item class="_selectable">
+        <va-navbar-item class="_selectable" ref="tv_icon">
           <a href="javascript:" class="d-block px-4 py-3 menuitem active">
             <img src="../assets/tv.png" alt="Icono de TV" class="d-block svgicon pb-1" height="24">
             <span>TV</span>
@@ -32,7 +32,7 @@
       </template>
     </va-navbar>
     <div id="main">
-      <va-sidebar :minimized="minimized" textColor="dark" minimizedWidth="0" @close="minimized = !minimized">
+      <va-sidebar :minimized="minimized" textColor="dark" minimizedWidth="0">
         <div v-if="canales" style="z-index: 9999999">
           <va-sidebar-item id="favourite" @click="this.adultAllowed = false; favHidden = !favHidden"
                            :class="[!minimized ? '_selectable': '']"
@@ -121,7 +121,7 @@
       </va-sidebar>
 
       <template v-if="sidebarCanEnabled">
-        <sidebar :show="sidebarRightActive" :fono="fono_soporte" :correo="correo_soporte" :planes="planes"
+        <sidebar @close="sidebarRightActive = !minimized; $refs.tv_icon.$el.focus();" :show="sidebarRightActive" :fono="fono_soporte" :correo="correo_soporte" :planes="planes"
                  :planactual="planactual"></sidebar>
       </template>
 
@@ -159,7 +159,7 @@
           <div class="control-channel __next _selectable" @keydown.enter="controlHandler('fullscreen')">
             <va-icon :size="50" class="material-icons">fullscreen</va-icon>
           </div>
-          <div class="control-channel __next _selectable" @keydown.enter="controlHandler('info')">
+          <div class="control-channel __next _selectable" ref="info_btn" @keydown.enter="controlHandler('info')">
             <va-icon :size="44" class="material-icons">info</va-icon>
           </div>
         </div>
@@ -169,7 +169,7 @@
         {{ addFavClick ? 'Se agregó a favoritos' : 'El favorito fue eliminado' }}
       </div>
 
-      <custom-modal v-if="showEpgModal" @close="showEpgModal = false">
+      <custom-modal v-if="showEpgModal" @close="showEpgModal = false; $refs.info_btn.focus()">
         <template v-slot:body>
           <Epg :currChId="currentCh?.cn_id ?? 1958" @clickEpg="playFromEpg" ref="epgModal"/>
         </template>
@@ -271,14 +271,23 @@ export default {
       method: 'POST',
       body: favoData,
       redirect: 'follow'
-    });
+    })
+
     const fetchCanal = await fetch(process.env.VUE_APP_API_URL + 'api/get-web2', {
       method: 'POST',
       body: this.loginData
-    });
+    })
 
     const jsonFavos = await fetchFavos.json();
     const jsonCanal = await fetchCanal.json();
+
+    if(jsonFavos.error || jsonCanal.error) {
+      const {isLogged} = loginService();
+      isLogged.value = false;
+      localStorage.clear();
+      this.$router.replace({name: 'login'})
+      return
+    }
 
     this.favoritos = jsonFavos.channels;
     this.canales = jsonCanal.sections;
@@ -327,61 +336,13 @@ export default {
 
     this.loadSelectables()
 
-    const userActive = () => {
-      clearTimeout(this.time_out)
-      this.hideControls = false
-      this.hideMenuBtn = false;
-      this.custom_fav_btn(this.currentCh);
+    window.addEventListener('keydown', this.keydownHandler, true)
 
-      const ch = this.currentCh;
-      const ahora = Math.round(+new Date() / 1000);
-
-      if (ch && ch.epg && ch.epg.length === 0) {
-        this.drawProgress("noepg");
-      } else {
-        const currentEnd = ch.epg ? ch.epg[0].fecha_fin : -1;
-
-        if (ahora > currentEnd) {
-          this.drawProgress(ch.epg.length > 1 ? "next" : "noepg");
-        } else {
-          this.drawProgress("default");
-        }
+    setTimeout(() => {
+      if(!this.firstInteract){
+        this.userInactive()
       }
-    }
-
-    const userInactive = () => {
-
-      this.hideControls = true
-      this.hideFavBtn = true;
-      this.hideDelFavBtn = true;
-      this.minimized = true
-      this.sidebarRightActive = false
-      this.hideMenuBtn = this.minimized && (document.fullscreenElement || document.webkitFullscreenElement);
-
-      if (this.addFavClick) setTimeout(_ => this.addFavClick = false, 10000);
-      if (this.delFavClick) setTimeout(_ => this.delFavClick = false, 10000);
-    }
-
-    window.addEventListener('keydown', (e) => {
-
-      if(this.showEpgModal && e.key !== "Enter") {
-        e.preventDefault()
-        e.stopPropagation()
-
-        switch (e.key){
-          case "ArrowDown" :  this.$refs.epgModal.scrollHandler("vertical",   30  ); break;
-          case "ArrowUp" :    this.$refs.epgModal.scrollHandler("vertical",   -30 ); break;
-          case "ArrowLeft" :  this.$refs.epgModal.scrollHandler("horizontal", -30 ); break;
-          case "ArrowRight" : this.$refs.epgModal.scrollHandler("horizontal", 30  ); break;
-        }
-        return
-      }
-
-      userActive()
-      this.time_out = setTimeout(userInactive, 10000)
-    })
-
-    setTimeout(userInactive, 10000)
+    }, 10000)
   },
 
   updated() {
@@ -488,6 +449,7 @@ export default {
 
   data() {
     return {
+      firstInteract: false,
       hideControls: false,
       time_out: null,
       progress: null,
@@ -541,6 +503,68 @@ export default {
   },
 
   methods: {
+
+    keydownHandler(e) {
+
+      if(e.target.id === "closer_btn"){
+        window.removeEventListener('keydown', this.keydownHandler, true)
+        return
+      }
+
+      this.firstInteract = true;
+
+      if(this.showEpgModal && e.key !== "Enter") {
+        e.preventDefault()
+        e.stopPropagation()
+
+        switch (e.key){
+          case "ArrowDown" :  this.$refs.epgModal.scrollHandler("vertical",   30  ); break;
+          case "ArrowUp" :    this.$refs.epgModal.scrollHandler("vertical",   -30 ); break;
+          case "ArrowLeft" :  this.$refs.epgModal.scrollHandler("horizontal", -30 ); break;
+          case "ArrowRight" : this.$refs.epgModal.scrollHandler("horizontal", 30  ); break;
+        }
+        return
+      }
+
+      this.userActive()
+      this.time_out = setTimeout(this.userInactive, 10000)
+    },
+
+    userActive() {
+      clearTimeout(this.time_out)
+      this.hideControls = false
+      this.hideMenuBtn = false;
+      this.custom_fav_btn(this.currentCh);
+
+      const ch = this.currentCh;
+      const ahora = Math.round(+new Date() / 1000);
+
+      if (ch && ch.epg && ch.epg.length === 0) {
+        this.drawProgress("noepg");
+      } else {
+        const currentEnd = ch.epg ? ch.epg[0].fecha_fin : -1;
+
+        if (ahora > currentEnd) {
+          this.drawProgress(ch.epg && ch.epg.length > 1 ? "next" : "noepg");
+        } else {
+          this.drawProgress("default");
+        }
+      }
+    },
+
+    userInactive(){
+      this.hideControls = true
+      this.hideFavBtn = true;
+      this.hideDelFavBtn = true;
+      this.minimized = true
+      this.sidebarRightActive = false
+      this.hideMenuBtn = this.minimized && (document.fullscreenElement || document.webkitFullscreenElement);
+
+      if (this.addFavClick) setTimeout(_ => this.addFavClick = false, 10000);
+      if (this.delFavClick) setTimeout(_ => this.delFavClick = false, 10000);
+
+      this.$refs.tv_icon?.$el?.focus()
+    },
 
     controlHandler(type) {
       switch (type) {
@@ -771,7 +795,7 @@ export default {
         // this.chNumtext.innerHTML = ch.numero;
         // this.chImgSrc.innerHTML = '<img src="' + ch.imagen + '" height="70">';
 
-        this.drawProgress(ch.epg.length > 0 ? "default" : "noepg");
+        this.drawProgress(ch.epg && ch.epg.length > 0 ? "default" : "noepg");
         this.player.play();
 
         if (showFavBtn) setTimeout(_ => this.custom_fav_btn(ch), 5000);

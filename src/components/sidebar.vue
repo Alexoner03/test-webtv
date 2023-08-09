@@ -415,6 +415,7 @@
                     style="width: 80px"
                     class="mr-4"
                     round
+                    id="closer_btn"
                     :class="[show ? '_selectable': '']"
                     @keydown.enter="getAction('logoutConfirm')"
                     @click="getAction('logoutConfirm')"

@@ -23,7 +23,7 @@ const router = createRouter({
 
 router.beforeEach((to,from,next)=>{
   const protected_routes = ['epg', 'player'];
-  const {isLogged} = loginService(); 
+  const {isLogged} = loginService();
 
   if(protected_routes.includes(to.name)){
     if(isLogged.value){

@@ -12,7 +12,7 @@ export default function()
 
         isLogged.value = loginKeys.every(el=>localKeys.includes(el)) &&
                         localStorage.cliente == process.env.VUE_APP_CLIENTE &&
-                        currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH*3600;
+                        currUnix - localStorage.logindate < process.env.VUE_APP_HOURS_TO_REAUTH * 3600;
     }
 
     const login = async (user, pass, mac = "") =>
