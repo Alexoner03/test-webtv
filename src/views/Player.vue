@@ -534,6 +534,8 @@ export default {
 
     keydownHandler(e) {
 
+      console.log(e.keyCode)
+
       if(e.target.id === "closer_btn"){
         window.removeEventListener('keydown', this.keydownHandler, true)
         return
