@@ -128,11 +128,6 @@
 }
 
 #userbg .va-button__content{
-    padding-left: 40px;
-    background-image: url('https://trapemn.tv/assets/webtv/user1.png');
-    background-size: 25px;
-    background-repeat: no-repeat;
-    background-position: 8px 4.5px;
     padding-bottom: 1px;
     line-height: 0;
 }

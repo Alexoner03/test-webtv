@@ -259,13 +259,9 @@ export default {
             const hour = moment().hour();
             const minutes = moment().minute();
 
-            refTimelineHeader.value.scroll({
-                left: hour * 300 + minutes * 5 - 100,
-            });
+            refTimelineHeader.value.scrollLeft = hour * 300 + minutes * 5 - 100;
 
-            refTimeLine.value.scroll({
-                left: hour * 300 + minutes * 5 - 100,
-            });
+            refTimeLine.value.scrollLeft = hour * 300 + minutes * 5 - 100;
         };
 
         onMounted(async () => {
