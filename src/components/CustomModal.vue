@@ -17,7 +17,7 @@ import {onMounted, ref} from "vue";
           <slot name="body">
             default body
           </slot>
-          <va-button ref="closer" style="color: white; font-size: 24px; font-weight: 900; background: transparent" @keydown.enter="$emit('close')">Presione ENTRAR para cerrar la programación</va-button>
+          <va-button ref="closer" id="closer" style="color: white; font-size: 24px; font-weight: 900; background: transparent" @keydown.enter="$emit('close')">Presione ENTRAR para cerrar la programación</va-button>
         </div>
       </div>
     </div>

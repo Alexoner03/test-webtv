@@ -296,6 +296,12 @@ export default {
           }
 
           refChannelList.value.scrollTop = refChannelList.value.scrollTop + value
+
+          const elm = document.querySelector("#closer")
+
+          if(elm) {
+            elm.focus()
+          }
         }
 
         return {

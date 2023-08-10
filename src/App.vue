@@ -80,4 +80,8 @@ body{
   color: #727377;
   width: 100%;
 }
+
+.alter_focus:focus{
+  border-color: white !important;
+}
 </style>

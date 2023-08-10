@@ -24,7 +24,7 @@
                    required>
           </div>
           <div>
-            <va-button size="medium" class="py-2 _selectable" :loading="logeando" @click="inicioSesion($event)">Ingresar</va-button>
+            <va-button size="medium" class="py-2 _selectable alter_focus" :loading="logeando" @click="inicioSesion($event)">Ingresar</va-button>
           </div>
         </form>
       </div>

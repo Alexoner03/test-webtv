@@ -44,6 +44,7 @@
         <div v-if="canales" style="z-index: 9999999">
           <va-sidebar-item id="favourite" @click="this.adultAllowed = false; favHidden = !favHidden"
                            :class="[!minimized ? '_selectable': '']"
+                           class="alter_focus"
                            @keydown.enter="this.adultAllowed = false; favHidden = !favHidden">
             <va-sidebar-item-content class="px-1 py-2">
               <va-icon class="material-icons mr-5"
@@ -59,14 +60,14 @@
 
           <va-sidebar-item hover-color="#222327" :class="{ hidden: !favHidden }">
             <va-sidebar-item-content class="px-1 py-2">
-              <button class="icon_button" :class="[!minimized ? '_selectable': '']"  @click="arrow_left" @keydown.enter="arrow_left">
+              <button class="icon_button" :class="[!minimized ? '_selectable': '']" @keydown.enter="arrow_left">
                 <img :src="require('@/assets/arrow_back.png')" alt="">
               </button>
               <va-sidebar-item-title class="px-2 text-center overflow-h">
                 <Trunquee :text="currentCat" v-if="currentCat"/>
               </va-sidebar-item-title>
 
-              <button class="icon_button" :class="[!minimized ? '_selectable': '']"  @click="arrow_right" @keydown.enter="arrow_right">
+              <button class="icon_button" :class="[!minimized ? '_selectable': '']"  @keydown.enter="arrow_right">
                 <img :src="require('@/assets/arrow_next.png')" alt="">
               </button>
             </va-sidebar-item-content>
@@ -627,7 +628,6 @@ export default {
 
     minimizedToggle() {
       this.minimized = !this.minimized
-      console.log("ok")
     },
 
     logout() {
@@ -656,11 +656,13 @@ export default {
     },
 
     arrow_left() {
+      console.log("ok")
       --this.num;
       this.draw_sections();
     },
 
     arrow_right() {
+      console.log("ok2")
       ++this.num;
       this.draw_sections();
     },
