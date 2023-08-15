@@ -37,8 +37,8 @@ import loginService from '../services/login.service'
 export default {
   data() {
     return {
-      user: 'pruebadesarrollo@demo.cl',
-      pass: 'groupalnetpro',
+      user: '',
+      pass: '',
       alertMsg: '',
       check: false,
       showAlert: false,
