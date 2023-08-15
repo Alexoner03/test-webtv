@@ -3,6 +3,6 @@ services:
   vue-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./docker/Dockerfile
     ports:
       - "50125:80"
