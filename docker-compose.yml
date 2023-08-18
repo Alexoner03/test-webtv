@@ -1,8 +1,8 @@
 version: '3'
 services:
-  vue-app:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
+  webserver:
+    image: nginx:latest
     ports:
       - "50125:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html
